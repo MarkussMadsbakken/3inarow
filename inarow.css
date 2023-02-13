@@ -1,7 +1,23 @@
 body {
-    margin: 0
+    background-color: #eaeaea;
+    margin: 0;
+    padding: 0;
 }
+
 canvas {
     width: 100ww;
     height: 100wh;
 }
+
+.maincontent {
+    font-family: Helvetica;
+    display: block;
+    justify-self: center;
+}
+
+.gamewrapper {
+    display: flex;
+    justify-content: center;
+    vertical-align: center;
+}
+
