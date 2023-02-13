@@ -6,4 +6,6 @@
 * separere brukere og holde styr på hvem sin tur det er.
 * oppdatere hvor mange spillere som er med, og hvor mange som venter på å bli med. Slags køsystem
 * backend server. php?
+* chat, lett å lage etter vanlig gameupdate
+* lage egene spillrom, hvor man kan endre innstillinger
 
