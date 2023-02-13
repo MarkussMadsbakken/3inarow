@@ -49,13 +49,16 @@ canvas {
 
 .sitetitle{
     /* skriver lobbynavn */
+    position: absolute;
+    color: #eaeaea;
+    left: 0;
+    width: 100%;
     font-family: Helvetica;
-    display: block;
     text-align: center;
     letter-spacing: 0.2px;
-    padding: 14px 16px;
-    align: center;
-    
+    padding-top: 14px;
+    padding-bottom: 14px;
+    pointer-events: none; /* siden sitetitle ligger over hele navigasjonslinjen, må dette til får å kunne fokusere på elementene under */
 }
 
 .gamewrapper {

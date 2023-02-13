@@ -9,3 +9,13 @@
 * chat, lett å lage etter vanlig gameupdate
 * lage egene spillrom, hvor man kan endre innstillinger
 
+
+Elo: 
+* Ea = 1/(1+(10**((Rb-Ra)/400)))
+    * R er rating
+    * E er forventet utfall
+* Ra = Ra+K(Sa - Ea)
+    * R er rating
+    * K er en kostant som kontrollerer hvor sensitiv ratingen blir
+    * E er forventet utfall
+    * Sa er det faktiske utfallet
