@@ -52,7 +52,7 @@ canvas {
     position: absolute;
     color: #eaeaea;
     left: 0;
-    width: 100%;
+    width: 98.5%;
     font-family: Helvetica;
     text-align: center;
     letter-spacing: 0.2px;
@@ -68,4 +68,3 @@ canvas {
     vertical-align: center;
     background-color: rgb(196, 187, 187);
 }
-
