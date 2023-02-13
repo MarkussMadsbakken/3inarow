@@ -10,4 +10,4 @@
 
 
 // bruke sse for å sende dataen til alle brukerene samtidig
-// kalles fra oppdaterings-funksjonen
+// kalles fra oppdaterings-funksjonen<
