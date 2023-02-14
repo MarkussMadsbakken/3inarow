@@ -4,6 +4,13 @@ Php er virker som om kun er for å sende enkle meldinger til server og tilbake, 
 
 For å sende data fra serveren fungere nok server sent events best. Det lages en eventListener, så man trenger ikke å styre mye med connection timeout. Websockets gjør at man kan sende data kontinuerling, noe som vi egentlig ikke trenger. Med sse kan vi sende data til serveren, og så pushe dataen til alle samtidig.
 
+## installasjon av Node.js
+1. last ned Node.js fra https://nodejs.org/en/
+2. kjør node -version i cmd (--version i terminal)
+3. last ned Node.js exec vscode extension
+4. kjør app.js ved å trykke f8, og avslutt med f9
+
+
 </br>
 </br>
 
