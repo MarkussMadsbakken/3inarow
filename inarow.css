@@ -22,3 +22,63 @@ body {
     aspect-ratio: 2;
     width: 100%;
 } */
+
+.maincontent {
+    font-family: Helvetica;
+    display: block;
+    justify-content: center;
+}
+
+.nav {
+    /* navigasjonslinjen */
+    list-style-type: none;
+    margin: auto;
+    padding: 0;
+    overflow: hidden;
+    background-color: #6e6d71;
+    position: relative;
+    top: 0;
+    width: 100%;
+    padding: 10px;
+}
+
+.nav a {
+    /* elementer i navigasjonslinjen */
+    font-family: Helvetica;
+    letter-spacing: 0.2px;
+    float: left;
+    display: block;
+    background-color: #6e6d71;
+    color: #eaeaea;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    cursor: pointer; /* for å markere at man kan trykke på gameid */
+    user-select: none; /* for å unngå å marker tekst istedenfor å trykke */
+}
+
+.nav a:hover {
+    background-color: #646464;
+}
+
+.sitetitle{
+    /* skriver lobbynavn */
+    position: absolute;
+    color: #eaeaea;
+    left: 0;
+    width: 98.5%;
+    font-family: Helvetica;
+    text-align: center;
+    letter-spacing: 0.2px;
+    padding-top: 14px;
+    padding-bottom: 14px;
+    pointer-events: none; /* siden sitetitle ligger over hele navigasjonslinjen, må dette til får å kunne fokusere på elementene under */
+}
+
+/* .gamewrapper {
+    margin: 20px;
+    display: flex;
+    justify-content: center;
+    vertical-align: center;
+    background-color: rgb(196, 187, 187);
+} */

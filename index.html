@@ -7,6 +7,14 @@
     </head>
 
     <body>
+        <div class = "nav">
+             
+            <a onclick = "goHome()"> Hjem </a> <!-- her kan vi sende en melding til serveren om at brukeren ønsker å gå tilbake-->
+            <a onclick = "copyGameLink()"> firepårad/gameid </a> <!-- kopiere lenke når trykket-->
+            <div class = "sitetitle"> lobby: lobbyname </div> 
+            
+        </div>
+
         <div class = "maincontent">
             <div class = "gamewrapper" onclick="c_click(event)">
                 <canvas id = "rowgame">
@@ -18,9 +26,14 @@
 
         </div>
 
+        <div id = test>
+            test av php-server
+        </div>
+
         <script src = inarow.js></script>
     </body>
 </HTML>
 
 <!-- popup hvis man ikke har valgt brukernavn, kanskje lage brukere?-->
+<!-- bruke ip for å identifisere hvilken bruker, beholde brukernavnet i localstorage-->
 <!-- noe som tracker winrate. Elo?-->
