@@ -19,9 +19,11 @@ let players = 3
 let winn_l = 4
 
 function c_click(event) {
+    let cs = window.getComputedStyle(canvas);
     let x = event.clientX - ww/2 + dim[0]/2*tile_size;
     let y = event.clientY - wh/2 - dim[1]/2*tile_size;
     let collum = Math.floor(x/tile_size)
+    console.log(cs.getPropertyValue("left").replace("px",""))
     place(collum)
 }
 function place(collum) {
@@ -95,7 +97,6 @@ function test_win() {
 }
 
 function Draw() {
-    console.log(board)
     ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, ww, wh);
 
