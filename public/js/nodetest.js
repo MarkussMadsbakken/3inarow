@@ -1,26 +1,17 @@
-Document.getElementById("test_button").onclick = function(){test("test")};
+document.getElementById("test_button").onclick = function(){sendData("test")};
 
-function test(message){
-    console.log(message);
-    // Sending messages, a simple POST
+var source = new EventSource("/game/gamestring");
+source.addEventListener("message", message => {console.log("returnerte: " + event.data)})
 
-    function sendMessage(message) {
-      fetch(url, {
-        method: 'POST',
-        body: message
-      });
-    }
-  
-    form.onsubmit = function() {
-      let message = form.message.value;
-      if (message) {
-        form.message.value = '';
-        sendMessage(message);
-      }
-      return false;
-    };
+function sendData(message){
+  console.log("sending data");
+  var xhp = new XMLHttpRequest(); // initierer en ny request
+
+  xhp.open("POST","/"+message,true); //man setter url til meldingen
+  xhp.send();
 }
 
 function ssetest(){
-    Document.getElementById("sse_test").innerHTML = "test"
+  console.log("gamestring");
+  document.getElementById("sse_test").innerHTML = "test";
 }
