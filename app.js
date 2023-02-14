@@ -23,7 +23,7 @@ app.get('/', function(req, res) {
 
 });
 
-app.get("/game/gamestring", async function(req, res){
+app.get("/serverMessages", async function(req, res){
   res.set({
     'Cache-Control': 'no-cache',
     'Content-Type': 'text/event-stream',
@@ -43,20 +43,31 @@ app.get("/game/gamestring", async function(req, res){
 })
 
 app.post('/:message', (req,res) => { //lager dictionary. f.eks /:userID/:move
-  console.log(req.params)
   var message = req.params["message"] //henter verdien til message
   console.log(message)
 
-  sendGameString();
+  publishServerMessage(message, "text");
   //sender respons 
   res.send("recieved");
 })
 
+//chat
+app.post("/chat/:name/:message", (req,res) => {
+  var name = req.params["name"]
+  var message = req.params["message"] //henter verdier
+  console.log(name + ": " + message)
 
-function sendGameString(){
+  //sender respons 
+  res.send("recieved");
+
+  publishServerMessage('{"name":"'+ name +'","chatMessage":"' + message+'"}',"chat");
+})
+
+function publishServerMessage(message, messageType){
   for (let id in users){
     let res = users[id];
-    res.write(`data: "test"\n\n`);
+    console.log(message)
+    res.write(`data:{"message":${message},"messageType":"${messageType}"}\n\n`);
   }
 
   // her må dataen sendes tilbake til app.get gamestring

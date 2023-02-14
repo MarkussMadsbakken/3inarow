@@ -87,3 +87,12 @@ canvas {
     right: 2%;
     top: 3%;
 }
+
+#typeField {
+    outline:  none;
+    margin-top: 200px;
+}
+
+input:focus{
+    outline: none;
+}

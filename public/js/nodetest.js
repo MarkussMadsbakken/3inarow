@@ -1,12 +1,24 @@
+//template for å sende meldinger til server, og motta svar
+
 document.getElementById("test_button").onclick = function(){sendData("test")};
 
-var source = new EventSource("/game/gamestring");
-source.addEventListener("message", message => {console.log("returnerte: " + event.data)})
+var source = new EventSource("/serverMessages");
+source.addEventListener("message", message => {
+  var message = JSON.parse(message.data); //gjør om til dictionary
+  console.log(message)
+  //console.log("type: "+message.messageType)
+  //console.log("message: "+message.message) 
+  if (message.messageType === "txt"){
+    console.log(message.message)
+  } else if(message.messageType === "chat"){
+    console.log(message.message.name +": "+ message.message.chatMessage) //rare navn men det er sånn det blir 
+  }
+})
 
 var sendingData = false;
 
 function sendData(message){
-  if (sendingData){return;}
+  if (sendingData){return;} //for å stoppe å lage flere requests samtidig
   sendingData = true;
 
   console.log("sending data");
@@ -21,27 +33,22 @@ function sendData(message){
     sendingData = false;
   }
 
-  xhp.ontimeout = (e) =>{ //connection timed out
+  xhp.ontimeout = (e) =>{ //connection timed out, resend
     console.log("timout for " + message)
     
     //resend
     console.log("resending data");
     var backupxhp = new XMLHttpRequest(); // initierer en ny request
 
-    backupxhp.open("POST","/"+message,true); //man setter url til meldingen
+    backupxhp.open("POST","/"+message,true);
     backupxhp.send();
-    
+
     backupxhp.onload = () => {
-      sendingData = false;
+      sendingData = false; //kanskje vise melding om connection issues
     }
 
-    backupxhp.ontimeout = (e) => {
+    backupxhp.ontimeout = (e) => { //connection terminated
       console.log("connection timed out");
     }
   }
-}
-
-function ssetest(){
-  console.log("gamestring");
-  document.getElementById("sse_test").innerHTML = "test";
 }
