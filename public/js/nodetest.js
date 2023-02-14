@@ -5,7 +5,7 @@ document.getElementById("test_button").onclick = function(){sendData("test")};
 var source = new EventSource("/serverMessages");
 source.addEventListener("message", message => {
   var message = JSON.parse(message.data); //gjør om til dictionary
-  console.log(message)
+  //console.log(message)
   //console.log("type: "+message.messageType)
   //console.log("message: "+message.message) 
   if (message.messageType === "txt"){
