@@ -8,6 +8,7 @@ For å sende data fra serveren fungere nok server sent events best. Det lages en
 1. last ned Node.js fra https://nodejs.org/en/
 2. kjør node -version i cmd (--version i terminal)
 3. last ned Node.js exec vscode extension
+4. åpne cmd og kjør npm install express --save
 4. kjør app.js ved å trykke f8, og avslutt med f9
 
 

@@ -8,14 +8,27 @@ var port = 3000
 var express = require('express');
 var app = express();
 
+//starte server
 app.listen(port)
 console.log("server started: http://localhost:"+port)
 
+//css
 app.use(express.static(__dirname + '/public'));
 
+//game (midlertidig index)
 app.get('/', function(req, res) {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
+
+app.post('/', (req,res) => {
+  var message = req.body
+  console.log("post from user")
+})
+
+//index
+
+
+
 
 
 // motta spilloppdateringer fra brukeren, og sjekke om riktig spiller har gitt input
