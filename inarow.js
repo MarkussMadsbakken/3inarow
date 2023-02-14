@@ -1,7 +1,12 @@
 let canvas = document.getElementById("rowgame")
 var ctx = canvas.getContext("2d");
+let cs = window.getComputedStyle(canvas);
 let ww = canvas.width
 let wh = canvas.height
+let cw = cs.getPropertyValue("width").replace("px","")
+let ch = cs.getPropertyValue("height").replace("px","")
+let sw = cw/ww
+let sh = ch/wh
 const wp = 4/5
 let dim = [5,5]
 let tile_size = Math.min(ww*wp/dim[0], wh*wp/dim[1])
@@ -15,15 +20,14 @@ let player_info =
 [{color: "rgb(200,50,50)",name: "Rød"},
 {color: "rgb(50,200,50)",name: "Grønn"},
 {color: "rgb(50,50,200)",name: "Blå"}]
-let players = 3
+let players = 2
 let winn_l = 4
 
 function c_click(event) {
-    let cs = window.getComputedStyle(canvas);
-    let x = event.clientX - ww/2 + dim[0]/2*tile_size;
-    let y = event.clientY - wh/2 - dim[1]/2*tile_size;
+    let x = event.clientX/sw - ww/2 + dim[0]/2*tile_size;
+    let y = event.clientY/sh - wh/2 - dim[1]/2*tile_size;
     let collum = Math.floor(x/tile_size)
-    console.log(cs.getPropertyValue("left").replace("px",""))
+    //console.log()
     place(collum)
 }
 function place(collum) {

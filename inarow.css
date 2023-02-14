@@ -18,11 +18,11 @@ body {
     width: 20vw;
     height: calc(100vh - 50px);
 }
-/* canvas {
+canvas {
     position: absolute;
     aspect-ratio: 2;
     width: 100%;
-} */
+}
 
 .maincontent {
     display: block;
