@@ -18,7 +18,7 @@ console.log("server started: http://localhost:"+port)
 app.use(express.static(__dirname + '/public'));
 
 //game (midlertidig index)
-app.get('/', async function(req, res) {
+app.get('/', function(req, res) {
   res.sendFile(path.join(__dirname, 'index.html'));
 
 });
@@ -48,7 +48,8 @@ app.post('/:message', (req,res) => { //lager dictionary. f.eks /:userID/:move
   console.log(message)
 
   sendGameString();
-  //res.send for respons
+  //sender respons 
+  res.send("recieved");
 })
 
 
