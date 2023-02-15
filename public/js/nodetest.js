@@ -63,9 +63,17 @@ function displayChat(chatMessage){
   }
 
   document.getElementById("msgContainer").innerHTML = "";
+  var prevChatter = ""
 
   chat.forEach(chatMessage => { //display meldinger
-    document.getElementById("msgContainer").innerHTML = document.getElementById("msgContainer").innerHTML + "<div class = 'chatElement'> <div class = 'chatName'>"+  chatMessage.name + ":"+ "</div> " + chatMessage.chatMessage + "</div>"
+    if (prevChatter === chatMessage.name){ //hvis meldingen sendes av samme person, sendes ikke navn og meldingene legges rett under hverandre (liten space ekstra space i css)
+      document.getElementById("msgContainer").innerHTML = document.getElementById("msgContainer").innerHTML + "<div class = 'chatElement'>" + chatMessage.chatMessage + "</div>"
+    }
+    else{ //ny melding fra en annen person
+      document.getElementById("msgContainer").innerHTML = document.getElementById("msgContainer").innerHTML + "<div class = 'chatElement'> <div class = 'chatName'>"+  chatMessage.name + ":"+ "</div> " + chatMessage.chatMessage + "</div>"
+    }
+    
+    prevChatter = chatMessage.name //lagrer navn
   }); //vet ikke hvordan men dette fungerer
 }
 
