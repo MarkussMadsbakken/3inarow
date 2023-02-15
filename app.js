@@ -20,7 +20,6 @@ app.use(express.static(__dirname + '/public'));
 //game (midlertidig index)
 app.get('/', function(req, res) {
   res.sendFile(path.join(__dirname, 'index.html'));
-
 });
 
 //når brukeren starter serveren, lages det en eventlistener
