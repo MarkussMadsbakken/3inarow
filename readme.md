@@ -1,5 +1,7 @@
 # Inarow
 
+__For å teste med mer enn 5 brukere må man åpne en annen nettleser (f.eks firefox eller edge)__
+
 Php er virker som om kun er for å sende enkle meldinger til server og tilbake, er ikke ment å være et skript om kjører konstant. Derfor blir det lettere å lage det i node.js
 
 For å sende data fra serveren fungere nok server sent events best. Det lages en eventListener, så man trenger ikke å styre mye med connection timeout. Websockets gjør at man kan sende data kontinuerling, noe som vi egentlig ikke trenger. Med sse kan vi sende data til serveren, og så pushe dataen til alle samtidig.

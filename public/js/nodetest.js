@@ -61,12 +61,12 @@ function displayChat(chatMessage){
   if (chat.length > 50){
     chat.shift();
   }
-  
+
   document.getElementById("msgContainer").innerHTML = "";
 
   chat.forEach(chatMessage => { //display meldinger
-    document.getElementById("msgContainer").innerHTML = document.getElementById("msgContainer").innerHTML + "<br/>"+  chatMessage.name+ ": " + chatMessage.chatMessage
-  });
+    document.getElementById("msgContainer").innerHTML = document.getElementById("msgContainer").innerHTML + "<div class = 'chatElement'> <div class = 'chatName'>"+  chatMessage.name + ": "+ "</div>" + chatMessage.chatMessage + "</div>"
+  }); //vet ikke hvordan men dette fungerer
 }
 
 
