@@ -1,10 +1,13 @@
 var chatinput = document.getElementById("typebox");
 
+var chat = [];
+
 chatinput.addEventListener("keydown",function(event){
     if (event.key === "Enter"){
         inputvalue = document.getElementById("typebox").value;
+        userName = document.getElementById("namebox").value;
         document.getElementById("typebox").value = "";
-        sendChat(inputvalue,"default");
+        sendChat(inputvalue,userName);
     }
 })
 

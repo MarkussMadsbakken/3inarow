@@ -23,6 +23,7 @@ app.get('/', function(req, res) {
 
 });
 
+//når brukeren starter serveren, lages det en eventlistener
 app.get("/serverMessages", async function(req, res){
   res.set({
     'Cache-Control': 'no-cache',
@@ -46,7 +47,7 @@ app.post('/:message', (req,res) => { //lager dictionary. f.eks /:userID/:move
   var message = req.params["message"] //henter verdien til message
   console.log(message)
 
-  publishServerMessage(message, "text");
+  publishServerMessage('{"message":"'+ message+'"}', "text");
   //sender respons 
   res.send("recieved");
 })
@@ -55,7 +56,6 @@ app.post('/:message', (req,res) => { //lager dictionary. f.eks /:userID/:move
 app.post("/chat/:name/:message", (req,res) => {
   var name = req.params["name"]
   var message = req.params["message"] //henter verdier
-  console.log(name + ": " + message)
 
   //sender respons 
   res.send("recieved");
