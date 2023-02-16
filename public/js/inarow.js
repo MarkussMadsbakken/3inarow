@@ -24,6 +24,10 @@ let players = 2
 let winn_l = 4
 
 function c_click(event) {
+    let cw = cs.getPropertyValue("width").replace("px","")
+    let ch = cs.getPropertyValue("height").replace("px","")
+    let sw = cw/ww
+    let sh = ch/wh
     let x = event.clientX/sw - ww/2 + dim[0]/2*tile_size;
     let y = event.clientY/sh - wh/2 - dim[1]/2*tile_size;
     let collum = Math.floor(x/tile_size)
