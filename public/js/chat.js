@@ -48,3 +48,4 @@ function sendChat(message, name){
     }
   }
 }
+

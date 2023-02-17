@@ -78,3 +78,23 @@ function displayChat(chatMessage){
 }
 
 
+function doFirst(){
+  var background = document.getElementById("background");
+
+  if (sessionStorage.getItem("id") === null || sessionStorage.getItem("name")) {
+    background.style.filter = "blur(10px) saturate(0.8) grayscale(0.2)";
+  }
+}
+
+var getName = document.getElementById("getName");
+
+getName.addEventListener("keydown",function(event){
+  if (event.key === "Enter"){
+    sessionStorage.setItem("name",document.getElementById("getName").value);
+    getName.value = "";
+    console.log(sessionStorage.getItem("name"))
+  }
+})
+
+window.addEventListener("load", doFirst, false);
+

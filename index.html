@@ -8,6 +8,7 @@
     </head>
 
     <body>
+        <div id = background>
         <div class = "nav">
              
             <a onclick = "goHome()"> Hjem </a> <!-- her kan vi sende en melding til serveren om at brukeren ønsker å gå tilbake-->
@@ -39,17 +40,26 @@
 
         <div id = test>
             <button id = "test_button"> test </button> 
-            <div id = "sse_test"></div>
         </div>
-
-        <script src = public/js/chat.js></script>
-        <script src = /js/chat.js></script>
-        <script src = /js/inarow.js></script>
-        <script src = /js/nodetest.js></script>
         <!--
         <script src = public/js/inarow.js></script>
         <script src = public/js/nodetest.js></script>
         -->
+        </div>
+        <div id = "popup">
+            <div id = "messageText">
+                Skriv inn navn
+            </div>
+            <div id = "skrivNavn">
+                <input id = "getName" placeholder="navn...">
+            </div>
+        </div>
+        <script src = public/js/chat.js></script>
+        <script src = /js/chat.js></script>
+        <script src = /js/inarow.js></script>
+        <script src = /js/nodetest.js></script>
+        <script src = public/js/nodetest.js></script>
+
     </body>
 </HTML>
 
