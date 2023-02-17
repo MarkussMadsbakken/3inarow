@@ -5,15 +5,15 @@ var chat = [];
 chatinput.addEventListener("keydown",function(event){
     if (event.key === "Enter"){
         inputvalue = document.getElementById("typebox").value;
-        userName = document.getElementById("namebox").value;
         document.getElementById("typebox").value = "";
-        sendChat(inputvalue,userName);
+        sendChat(inputvalue,sessionStorage.getItem("name"));
     }
 })
 
 var sendingData = false;
 
 function sendChat(message, name){
+  console.log(name)
   if (sendingData){return;}
   sendingData = true;
 

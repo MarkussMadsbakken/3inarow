@@ -16,7 +16,7 @@ body {
 .chat {
     position: absolute;
     left: 80vw;
-    width: 20vw;
+    width: 22vw;
     height: calc(100vh - 50px);
     background-color: #bbbbbb;
     display: flex;
@@ -97,19 +97,18 @@ canvas {
 
 #typeField {
     margin-top: 20px;
-}
-
-#nameField {
     margin-bottom: 60px;
 }
 
 input:focus{
     outline: none;
 }
+
 #msgContainer{
     width: 100%;
     margin-top: auto;
 }
+
 .chatElement{
     margin-top: 0.2vw;
     margin-left: 2vw;
@@ -168,6 +167,3 @@ input:focus{
     border-radius: 0px;
     border: 1px solid black;
 }
-
-
-

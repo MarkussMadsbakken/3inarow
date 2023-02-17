@@ -32,9 +32,14 @@ app.get("/serverMessages", async function(req, res){
   res.flushHeaders(res,req);
 
   let id = Math.random();
+
+  let responseIdText = '{"responseId":"'+id+'"}'
+  res.write(`data:{"message":${responseIdText},"messageType":"id"}\n\n`)
+  
   users[id] = res;
 
   console.log("user listening to events" + id); //dette slettes serverside, legge inn slik at id lagres i session/lage bruker
+  
 
   req.on("close",function(){
     console.log("deleting" + id)
