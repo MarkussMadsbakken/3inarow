@@ -9,101 +9,129 @@
 <body>
     
     <script>
-        let test = [["w","ww","fw","fw"], ["wdw","wd","fw"]]
-        console.log(typeof(test), typeof(test)=="object")
+        let test2 = [["w","ww","fw","fw"], ["wdw","wd","fw"]]
+        let test = [[1,2,3,4],[5,6,[7,[8],9,[10]]]]
+        /* console.log(typeof(test), typeof(test)=="object") */
 
         let CodeArray = ["!","@", "#", "$", "%", "&","/", "(", ")","="]
 
-        test1 = String(test)
+  /*       test1 = String(test)
         tester = ["ø", "p", "k"]
         obj = "her"
         console.log(tester.map(tester => obj.includes(tester)), "pp")
         console.log(tester.map(tester => obj.includes(tester)).includes(true), "p")
 
         console.log(test1)
-        console.log(typeof(test1))
+        console.log(typeof(test1))  
         console.log("her"+"dd")
+
+        testerer = ["her", "der"]
+        testerer[0] = ["ola", "torer"] 
+        console.log(testerer, "jdkkmøm")
+ */
+        /* ded = ["hei"]
+        console.log(ded.splice(0), ded)
+        console.log(ded.splice(0, 1, "per"), ded) */
+
 
         function stringCoderMaxIsLenOfCodeArray(liste, num = 0) {
             let listToString = ""
             let last = false
+            console.log(liste, liste.length)
             
-            for (let underList of liste) {
+            for (let i = 0; i < liste.length; i++) {
+                underList = liste[i]
+                
+
                 console.log(underList, num)
-                if (liste.indexOf(underList) == liste.length - 1 ) {
-                    last = true
-                }
 
                 if (typeof(underList)=="object") {
                     newEle = stringCoderMaxIsLenOfCodeArray(underList, num+1)
                 }
-                else if (typeof(underList)=="string"){
+                else if (typeof(underList)=="string" || typeof(underList=="int")){
                     newEle = underList 
                 }
-
-                if (!last) {
+                else {
+                    for (let i = 0; i < 5; i++) {
+                        console.log                  
+                    }
+                }
+                
+                if ((i != liste.length - 1) || (liste.length == 1))  {
                     listToString += newEle + CodeArray[num]
+                    
                 }
                 else {
                     listToString += newEle
                 }
 
             }
+            console.log(listToString)
             return listToString
         }
-        function stringDecoderMaxIsLenOfCodeArray(enTextString, num = (CodeArray.length-1)) {
-            let liste = []
-            //enTextString = "pe)r=tor"
+        /* function lownumFinder(enTextString) {
+            heighest = -1
+            for (let ele of CodeArray) {
+                console.log(ele, enTextString.includes(ele))
+                if (enTextString.includes(ele)) {
+                    console.log()
+                    heighest = CodeArray.indexOf(ele)
+                }
+
+            }
+            console.log(heighest)
+            return heighest
             
+        } */
+
+        function stringDecoderMaxIsLenOfCodeArray(enTextString, num = 0) {
+            
+
             if (enTextString.includes(CodeArray[num])) {
                 console.log("p p")
 
-                splittaOpp = enTextString.split(CodeArray[num])
+                let splittaOpp = enTextString.split(CodeArray[num])
+
                 for (let underList of splittaOpp) {
-                    console.log(underList)
+                    console.log(splittaOpp, num)
+                    console.log(underList, num)
+                    let newInn = underList
+                    
                     //console.log(CodeArray.map(CodeArray => splittaOpp.includes(CodeArray)))
                     if (CodeArray.map(CodeArray => underList.includes(CodeArray)).includes(true)) {
-                        underList = stringDecoderMaxIsLenOfCodeArray(underList, num-1)
+                        console.log(underList, "rpe", splittaOpp, num, splittaOpp, newInn, "hed")
+                       
+
+                        //console.log(stringDecoderMaxIsLenOfCodeArray(newInn, num+1), "e2e")
+                        underList2 = stringDecoderMaxIsLenOfCodeArray(newInn, num+1)
+                        console.log(underList, "r2", splittaOpp, underList2, newInn, num, splittaOpp)
+                        underList = underList2
+                        console.log(splittaOpp, "d")
+                        splittaOpp.splice(splittaOpp.indexOf(newInn), 1, underList2)
+                        console.log(splittaOpp, "g")
+                        
+                        console.log(underList, "r23", splittaOpp, underList2, newInn, num, splittaOpp)
                     }
+                    else if (newInn == "") {
+                        splittaOpp.splice(splittaOpp.indexOf(newInn), 1)
+                    }
+                    console.log(splittaOpp, num)
                 }
+                console.log(splittaOpp, num)
+
                 return splittaOpp
             }
             else if (CodeArray.map(CodeArray => enTextString.includes(CodeArray)).includes(true)) {
-                console.log("r", enTextString)
-                newListe = stringDecoderMaxIsLenOfCodeArray(enTextString, num-1)
-                return newListe
-            }
-
-            return "teksten kan ikke gjøre om til liste"
-/* 
-
-            let last = false
-            
-            for (let underList of liste) {
-                console.log(underList, num)
-                if (liste.indexOf(underList) == liste.length - 1 ) {
-                    last = true
-                }
-
-                if (typeof(underList)=="object") {
-                    newEle = stringN(underList, num+1)
-                }
-                else if (typeof(underList)=="string"){
-                    newEle = underList 
-                }
-
-                if (!last) {
-                    listToString += newEle + CodeArray[num]
-                }
-                else {
-                    listToString += newEle
-                }
+                console.log("r", enTextString, num)
+                splittaOppe = stringDecoderMaxIsLenOfCodeArray(enTextString, num+1)
+                return [splittaOppe]
                 
-
-
             }
-            return listToString */
+
+            return "teksten kan ikke gjøre om til liste" + enTextString + CodeArray.map(CodeArray => enTextString.includes(CodeArray)).includes(true)
         }
+
+        
         
             //console.log(list("her"))
 
@@ -111,10 +139,13 @@
         textified = stringCoderMaxIsLenOfCodeArray(test)
         console.log(textified)
 
-        toListAgain = stringDecoderMaxIsLenOfCodeArray("pe)r=tor")
+        console.log("start")
+        toListAgain = stringDecoderMaxIsLenOfCodeArray(textified)
         console.log(toListAgain)
 
 
     </script>
 </body>
 </html>
+
+<!-- Må lage slik at hvis det ikke inneholder de første fem tegne hoppper man rett til det første tilgjengelige -->
