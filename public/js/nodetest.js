@@ -4,7 +4,6 @@ document.getElementById("test_button").onclick = function(){sendData("test")};
 
 var source = new EventSource("/serverMessages");
 source.addEventListener("message", message => {
-  console.log(message)
   var message = JSON.parse(message.data); //gjør om til dictionary
   console.log(message)
   //console.log("type: "+message.messageType)
@@ -15,6 +14,8 @@ source.addEventListener("message", message => {
 
     console.log(message.message.name +": "+ message.message.chatMessage); //rare navn men det er sånn det blir 
     displayChat(message.message)
+  } else if (message.messageType === "id"){
+    
   }
 })
 
@@ -55,6 +56,7 @@ function sendData(message){
     }
   }
 }
+
 
 function displayChat(chatMessage){
   chat.push(chatMessage)

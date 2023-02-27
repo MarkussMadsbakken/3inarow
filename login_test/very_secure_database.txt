@@ -1,9 +1,25 @@
 veldig sikker database for å lagre viktige dokumenter
 
+begin og end markerer hvor app.js skal skal lese data
+den første admin-linjen kan aldri slettes - ellers ødelegger man json parse
 
+legge til funksjon for kommentarer
 
 --begin
 {
-    "admin": {password: "admin", elo: 500}
-    "admin2": {password: "admin", elo: 500}
+    "admin": {"password": "admin", "elo": "500"}
+    ,"admin2": {"password": "admin", "elo": "500"}
+    ,"admin2": {"password": "admin", "elo": "500"}
+    ,"admin2": {"password": "admin", "elo": "500"}
+    ,"admin2": {"password": "admin", "elo": "500"}
+    ,"admin2": {"password": "admin", "elo": "500"}
+    ,"admin2": {"password": "admin", "elo": "500"}
+    ,"admin2": {"password": "admin", "elo": "500"}
+    ,"admin2": {"password": "admin", "elo": "500"}
+    ,"admin2": {"password": "admin", "elo": "500"}
+    ,"admin2": {"password": "admin", "elo": "500"}
+    ,"admin2": {"password": "admin", "elo": "500"}
+    ,"admin2": {"password": "admin", "elo": "500"}
+    ,"admin2": {"password": "admin", "elo": "500"}
 }
+--end
