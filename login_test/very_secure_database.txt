@@ -1,0 +1,9 @@
+veldig sikker database for å lagre viktige dokumenter
+
+
+
+--begin
+{
+    "admin": {password: "admin", elo: 500}
+    "admin2": {password: "admin", elo: 500}
+}
