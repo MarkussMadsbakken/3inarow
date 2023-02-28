@@ -44,16 +44,15 @@ app.get('/signup', function(req,res){
     res.sendFile(path.join(__dirname, 'signup.html'));
 })
 
-app.get('/signup/:username/:password', (req,res) =>{
+app.post('/signup/:username/:password', (req,res) =>{
     //henter verdier
     let username = req.params["username"];
     let password = req.params["password"];
 
-    res.send("f")
+    addUser(username, password, res);
 })
 
-
-var databasePath = __dirname+"/very_secure_database.txt";
+var databasePath = __dirname+"/very_secure_database.txt"; //hvor databasen ligger
 
 const readFile = util.promisify(fs.readFile) //gjør at man kan gjøre noe med dataen etter den er hentet
 
@@ -61,8 +60,6 @@ function readDatabase(){
   // lese database
   return readFile(databasePath, 'utf8')
 }
-
-var appendData = '"admin2": {"password": "admin", "elo": "500"}'
 
 function appendDatabase(appendData){
   readDatabase().then(data =>{
@@ -77,8 +74,10 @@ function appendDatabase(appendData){
     fs.writeFile(databasePath, data, err => { //skriver dataen
       if (err) { //hvis man ikke klarer å skrive til databasen
         console.error(err);
+        return err;
       } else {
         console.log("data written \n")
+        return "user added successfully"
       }
     })
   })
@@ -96,6 +95,15 @@ function fetchData(){ //henter ut data i et leselig format
   })
 }
 
+function countJSONLength(data){ //teller antall ULIKE keys i et JSON objekt
+  var count = 0
+  for (let key in data){
+    if(data.hasOwnProperty(key))
+      count++;
+  }
+  return count;
+}
+
 async function checkPassword(username, userpassword,res){ //sjekker passord med verdi lagret i databasen
 
     //unngå at programmet kræsjer hvis verdiene ikke kan brukes
@@ -108,7 +116,7 @@ async function checkPassword(username, userpassword,res){ //sjekker passord med 
 
     //sjekker at brukernavnet finnes i databasen:
     if (!db.hasOwnProperty(username)){
-        res.send("wrong username or password");
+        res.send("username does not exist");
         return;
     }
 
@@ -122,4 +130,27 @@ async function checkPassword(username, userpassword,res){ //sjekker passord med 
     }
 }
 
-// når man logger inn henter man fra databasen
+async function addUser(username, userpassword, res){ //legger til bruker
+  //unngå at programmet kræsjer hvis verdiene ikke kan brukes
+  if (typeof username == 'undefined'|| typeof userpassword == 'undefined'){
+    res.send("input is undefined");
+    return;
+  }
+  let db = await fetchData() //venter til data er hentet fra databasen
+
+  //sjekker at brukernavnet ikke finnes i databasen:
+  if (db.hasOwnProperty(username)){
+    res.send("username already exists");
+    return;
+  }
+  
+  //unngå at noen spammer serveren full av tomme brukere
+  if (countJSONLength(db) >= 20){
+    res.send("brukere er foreløpig begresnet til 20, send melding på teams til Markus Stuevold Madsbakken");
+    return;
+  }
+
+  res.send(appendDatabase(
+    '"' + username + '": {"password": "' + userpassword + '"}'
+  ));
+}
