@@ -22,8 +22,8 @@ __For å teste med mer enn 5 brukere må man åpne en annen nettleser (f.eks fir
 * ~~backend server. node.js~~
 * ~~chat, lett å lage etter vanlig gameupdate~~
 * lage egene spillrom, hvor man kan endre innstillinger
-* innlogging og lagre passord i database https://www.passportjs.org/tutorials/password/verify/
-
+* ~~innlogging og lagre passord i database ~~
+* spar plass ved uglify og beautify (burde lagre originalfilene et sted) https://beautifier.io/ og https://skalman.github.io/UglifyJS-online/
 
 
 Elo: 
