@@ -7,19 +7,7 @@ legge til funksjon for kommentarer
 
 --begin
 {
-    "admin": {"password": "admin", "elo": "500"}
-    ,"admin2": {"password": "admin", "elo": "500"}
-    ,"admin2": {"password": "admin", "elo": "500"}
-    ,"admin2": {"password": "admin", "elo": "500"}
-    ,"admin2": {"password": "admin", "elo": "500"}
-    ,"admin2": {"password": "admin", "elo": "500"}
-    ,"admin2": {"password": "admin", "elo": "500"}
-    ,"admin2": {"password": "admin", "elo": "500"}
-    ,"admin2": {"password": "admin", "elo": "500"}
-    ,"admin2": {"password": "admin", "elo": "500"}
-    ,"admin2": {"password": "admin", "elo": "500"}
-    ,"admin2": {"password": "admin", "elo": "500"}
-    ,"admin2": {"password": "admin", "elo": "500"}
-    ,"admin2": {"password": "admin", "elo": "500"}
+    "admin": {"password": "admin"}
+    ,"admin2": {"password": "admin"}
 }
 --end

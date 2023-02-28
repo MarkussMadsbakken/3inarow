@@ -37,7 +37,7 @@ function readDatabase(){
 
 var appendData = '"admin2": {"password": "admin", "elo": "500"}'
 
-function appenddatabase(appendData){
+function appendDatabase(appendData){
   readDatabase().then(data =>{
     //finner hvor dataen skal skrives
     let endpos = data.search("--end");
@@ -57,15 +57,26 @@ function appenddatabase(appendData){
   })
 }
 
-function fetchData(){
-  readDatabase().then(data =>{
+function fetchData(){ //henter ut data i et leselig format
+  return readDatabase().then(data =>{
     //finner hvor dataen skal leses
     let beginpos = data.search("--begin");
     let endpos = data.search("--end");
     data = data.slice("--begin".length + beginpos,endpos);
     data = JSON.parse(data);
+
+    return data //returnerer data
   })
 }
 
+async function checkPassword(username, userpassword){ //sjekker passord med verdi lagret i databasen
+    let db = await fetchData() //venter til data er hentet fra databasen
+    if (db[username].password === userpassword){ //sjekker om passorder stemmer med det fra brukeren
+        console.log("login");
+    }
+
+}
+
+checkPassword("admin","admin");
 
 // når man logger inn henter man fra databasen
