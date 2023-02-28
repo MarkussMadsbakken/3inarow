@@ -10,16 +10,14 @@ passinput.addEventListener("keydown",function(event){
         let nameinputvalue = document.getElementById("username").value;
         let passinputvalue = document.getElementById("password").value;
         document.getElementById("password").value = "";
-        sendLogin(nameinputvalue, passinputvalue);
+        sendNewUser(nameinputvalue, passinputvalue);
     }
 })
 
-//Hashe clientside
-//Serveren eller hackere kan ikke få tak i passordet direkte, men kan lett stjele hashen
-//Bedre metode: https://security.stackexchange.com/questions/25585/is-my-developers-home-brew-password-security-right-or-wrong-and-why
-async function sendLogin(username, password){
+//sende ny bruker til serveren
+async function sendNewUser(username, password){
     result = await sha256(password);
-    publishLogin(username,result)
+    publishNewUser(username,result);
 }
 
 //sjålet fra stackoverflow
@@ -38,14 +36,14 @@ async function sha256(message) { //metode for å hashe en string
     return hashHex;
 }
 
-function publishLogin(username, password){
+function publishNewUser(username, password){
     if (sendingData){return;}
     sendingData = true;
   
     var xhp = new XMLHttpRequest(); // initierer en ny request
     xhp.responseType = 'text';
   
-    xhp.open("POST","/login/"+ username + "/" + password,true); //man setter url til meldingen
+    xhp.open("POST","/signup/"+ username + "/" + password,true); //man setter url til meldingen
     xhp.send();
 
     xhp.timeout = 2000;

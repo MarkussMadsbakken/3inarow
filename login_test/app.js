@@ -10,7 +10,7 @@ var express = require('express');
 var app = express();
 
 const crypto = require('crypto');
-const { text } = require('express');
+const { text, response } = require('express');
 
 let users = Object.create(null);
 
@@ -21,10 +21,37 @@ console.log("server started: http://localhost:"+port)
 //css
 app.use(express.static(__dirname));
 
-//game (midlertidig index)
+//innlogget
 app.get('/', function(req, res) {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
+
+//loginpage
+app.get('/login', function(req, res) {
+    res.sendFile(path.join(__dirname, 'login.html'));
+  });
+
+//login
+app.post("/login/:username/:password", (req,res) => {
+    let username = req.params["username"]
+    let password = req.params["password"] //henter verdier
+    //sender respons 
+    checkPassword(username,password,res);
+  })
+
+//signup
+app.get('/signup', function(req,res){
+    res.sendFile(path.join(__dirname, 'signup.html'));
+})
+
+app.get('/signup/:username/:password', (req,res) =>{
+    //henter verdier
+    let username = req.params["username"];
+    let password = req.params["password"];
+
+    res.send("f")
+})
+
 
 var databasePath = __dirname+"/very_secure_database.txt";
 
@@ -69,14 +96,30 @@ function fetchData(){ //henter ut data i et leselig format
   })
 }
 
-async function checkPassword(username, userpassword){ //sjekker passord med verdi lagret i databasen
-    let db = await fetchData() //venter til data er hentet fra databasen
-    if (db[username].password === userpassword){ //sjekker om passorder stemmer med det fra brukeren
-        console.log("login");
+async function checkPassword(username, userpassword,res){ //sjekker passord med verdi lagret i databasen
+
+    //unngå at programmet kræsjer hvis verdiene ikke kan brukes
+    if (typeof username == 'undefined'|| typeof userpassword == 'undefined'){
+        res.send("input is undefined");
+        return;
     }
 
-}
+    let db = await fetchData() //venter til data er hentet fra databasen
 
-checkPassword("admin","admin");
+    //sjekker at brukernavnet finnes i databasen:
+    if (!db.hasOwnProperty(username)){
+        res.send("wrong username or password");
+        return;
+    }
+
+    console.log(db)
+    if (db[username].password === userpassword){ //sjekker om passorder stemmer med det fra brukeren
+        res.send("login");
+        return;
+    } else {
+        res.send("wrong username or password");
+        return;
+    }
+}
 
 // når man logger inn henter man fra databasen
