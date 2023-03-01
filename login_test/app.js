@@ -9,14 +9,11 @@ var port = 3000
 var express = require('express');
 var app = express();
 
-const crypto = require('crypto');
-const { text, response } = require('express');
-
-let users = Object.create(null);
+var users = {"f":{"username": "f"}}; //initierer brukere
 
 //starte server
 app.listen(port)
-console.log("server started: http://localhost:"+port)
+console.log("server started: http://localhost:"+port);
 
 //css
 app.use(express.static(__dirname));
@@ -25,10 +22,6 @@ app.use(express.static(__dirname));
 app.get('/', function(req, res) {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
-
-app.post('/getImportantFile/:token', function(req,res){
-  res.send(2);
-})
 
 //loginpage
 app.get('/login', function(req, res) {
@@ -158,3 +151,41 @@ async function addUser(username, userpassword, res){ //legger til bruker
     '"' + username + '": {"password": "' + userpassword + '"}'
   ));
 }
+
+
+//når brukeren starter serveren, lages det en eventlistener
+app.get("/serverMessages/:token", async function(req, res){
+  res.set({
+    'Cache-Control': 'no-cache', 
+    'Content-Type': 'text/event-stream',
+    'Connection': 'keep-alive'
+  })
+  res.flushHeaders(res,req);
+
+
+  //sjekker om brukeren har en token/er logget  inn
+  let token = req.params["token"];
+  if (!users.hasOwnProperty(token)){
+    console.log("user without valid token");
+    res.write(`data:{"message":"no_token","messageType":"err"}\n\n`); //sender error message
+    return; //avslutter uten å lagre res
+  }
+  
+  users[token]["res"] = res;
+  if (users[token].hasOwnProperty("timeout")){
+    console.log(token + " timed out, but reestablished connection")
+    clearTimeout(users[token]["timeout"]) //clearer timeout
+  }
+  console.log("user listening to events: " + token); //dette slettes serverside
+  req.on("close",function(){
+    //venter 10000 ms og sletter bruker
+    users[token]["timeout"] = setTimeout(() => {
+      console.log("deleting: " + token)
+      delete users[token];
+    }, "60000")
+  })
+})
+
+//vi lagrer token som slags id, vi trenger ikke resid.
+//når man skal listene til event listener, trenger man id, og man blir "kicka" hvis man ikke har token.
+//token.res(responseText)
