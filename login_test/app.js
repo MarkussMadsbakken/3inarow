@@ -123,8 +123,7 @@ async function checkPassword(username, userpassword,res){ //sjekker passord med 
       //lager ny token
       let newToken = generateToken();
       users[newToken] = {"username": username};
-      console.log(users)
-      res.send("login: " + newToken)
+      res.send("login:" + newToken)
         
     } else {
         res.send("wrong username or password");
@@ -132,6 +131,7 @@ async function checkPassword(username, userpassword,res){ //sjekker passord med 
     }
 }
 
+//lager en ny token
 function generateToken(){
   let length = 8
   let result = "";
@@ -201,10 +201,13 @@ app.get("/serverMessages/:token", async function(req, res){
     users[token]["timeout"] = setTimeout(() => {
       console.log("deleting: " + token)
       delete users[token];
-    }, "30000")
+    }, "5000")
   })
 })
 
 //vi lagrer token som slags id, vi trenger ikke resid.
 //når man skal listene til event listener, trenger man id, og man blir "kicka" hvis man ikke har token.
 //users[token][res].write(servermessage)
+
+
+//hvis man bytter fane (kanskje også hvis man mister connection?)  skjer ikke "close" før serveren stopper å motta pings fra bruker, og tar dermed mye lengre tid

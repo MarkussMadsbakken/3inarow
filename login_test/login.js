@@ -52,6 +52,13 @@ function publishLogin(username, password){
   
     xhp.onload = () => {
       sendingData = false;
+
+      if (xhp.response.includes("login:")){
+        localStorage.setItem("token",xhp.response.split(":")[1]); //splitter rundt ":" og setter sessionstorage til verdien etter 
+        console.log(localStorage.getItem("token"));
+        window.location.href = "/"
+      }
+
       errormsg.innerHTML = (xhp.response);
     }
     
