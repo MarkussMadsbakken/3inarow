@@ -119,12 +119,31 @@ async function checkPassword(username, userpassword,res){ //sjekker passord med 
 
     console.log(db)
     if (db[username].password === userpassword){ //sjekker om passorder stemmer med det fra brukeren
-        res.send("login");
-        return;
+
+      //lager ny token
+      let newToken = generateToken();
+      users[newToken] = {"username": username};
+      console.log(users)
+      res.send("login: " + newToken)
+        
     } else {
         res.send("wrong username or password");
         return;
     }
+}
+
+function generateToken(){
+  let length = 8
+  let result = "";
+  const char = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  const charlenght = char.length;
+  let i = 0;
+
+  while (i < length){
+    result += char.charAt(Math.floor(Math.random()*charlenght));
+    i += 1;
+  }
+  return result;
 }
 
 async function addUser(username, userpassword, res){ //legger til bruker
@@ -178,14 +197,14 @@ app.get("/serverMessages/:token", async function(req, res){
   }
   console.log("user listening to events: " + token); //dette slettes serverside
   req.on("close",function(){
-    //venter 10000 ms og sletter bruker
+    //venter 30000 ms og sletter bruker
     users[token]["timeout"] = setTimeout(() => {
       console.log("deleting: " + token)
       delete users[token];
-    }, "60000")
+    }, "30000")
   })
 })
 
 //vi lagrer token som slags id, vi trenger ikke resid.
 //når man skal listene til event listener, trenger man id, og man blir "kicka" hvis man ikke har token.
-//token.res(responseText)
+//users[token][res].write(servermessage)
