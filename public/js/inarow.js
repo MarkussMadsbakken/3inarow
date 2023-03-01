@@ -1,3 +1,58 @@
+function stringToList(liste, num = 0) {
+    let CodeArray = ["!","@", "#", "$", "%", "&", "/", "(", ")", "="]
+    let listToString = ""
+
+    for (let i = 0; i < liste.length; i++) {
+        underList = liste[i]
+        
+        if (typeof(underList)=="object") {
+            newEle = stringCoderMaxIsLenOfCodeArray(underList, num+1)
+        }
+        else if (typeof(underList)=="string" || typeof(underList=="int")){
+            newEle = underList 
+        }
+
+        
+        if ((i != liste.length - 1) || (liste.length == 1))  {
+            listToString += newEle + CodeArray[num]  
+        }
+        else {
+            listToString += newEle
+        }
+
+    }
+    return listToString
+}
+
+function listToString(enTextString, num = 0) {
+    let CodeArray = ["!","@", "#", "$", "%", "&","/", "(", ")","="]  
+
+    if (enTextString.includes(CodeArray[num])) {
+
+        let splittaOpp = enTextString.split(CodeArray[num])
+
+        for (let underList of splittaOpp) {
+
+            if (CodeArray.map(CodeArray => underList.includes(CodeArray)).includes(true)) {
+
+                newUnderList = stringDecoderMaxIsLenOfCodeArray(underList, num+1)
+                splittaOpp.splice(splittaOpp.indexOf(underList2), 1, underList2)
+            }
+            else if (underList == "") {
+                splittaOpp.splice(splittaOpp.indexOf(underList), 1)
+            }
+        }
+        return splittaOpp
+    }
+    else if (CodeArray.map(CodeArray => enTextString.includes(CodeArray)).includes(true)) {
+        splittaOppe = stringDecoderMaxIsLenOfCodeArray(enTextString, num+1)
+        return [splittaOppe]
+        
+    }
+
+    return "teksten kan ikke gjøre om til liste" + enTextString + CodeArray.map(CodeArray => enTextString.includes(CodeArray)).includes(true)
+}
+
 let canvas = document.getElementById("rowgame")
 var ctx = canvas.getContext("2d");
 let cs = window.getComputedStyle(canvas);
@@ -31,6 +86,9 @@ function c_click(event) {
     let x = event.clientX/sw - ww/2 + dim[0]/2*tile_size;
     let y = event.clientY/sh - wh/2 - dim[1]/2*tile_size;
     let collum = Math.floor(x/tile_size)
+
+    
+    sendClick(String(collum), "test")
     //console.log()
     place(collum)
 }
@@ -148,3 +206,32 @@ function Rect(color, x, y, u, v) {
     ctx.stroke()
 }
 Draw()
+
+
+sendingData = false
+function sendClick(message, token) {
+    if (sendingData){return;} //for å stoppe å lage flere requests samtidig
+    sendingData = true;
+  
+    console.log("sending data");
+    var xhp = new XMLHttpRequest(); // initierer en ny request
+
+    xhp.responseType = 'text';
+
+    xhp.open("POST","/boardupdate/" + token + "/" + message,true); //man setter url til meldingen
+    xhp.send();
+  
+    xhp.timeout = 2000;
+  
+    xhp.onload = () => {
+      sendingData = false;
+    }
+    xhp.ontimeout = (e) =>{ //connection timed out, resend
+        console.log("timout for " + message)
+    }
+}
+
+function updateBoard(board) {
+    
+}
+

@@ -16,6 +16,8 @@ source.addEventListener("message", message => {
     displayChat(message.message)
   } else if (message.messageType === "id"){
     
+  } else if (message.messageType === "boardupdate") {
+    message.message.board
   }
 })
 
