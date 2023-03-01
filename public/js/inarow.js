@@ -6,7 +6,7 @@ function stringToList(liste, num = 0) {
         underList = liste[i]
         
         if (typeof(underList)=="object") {
-            newEle = stringCoderMaxIsLenOfCodeArray(underList, num+1)
+            newEle = stringToList(underList, num+1)
         }
         else if (typeof(underList)=="string" || typeof(underList=="int")){
             newEle = underList 
@@ -35,7 +35,7 @@ function listToString(enTextString, num = 0) {
 
             if (CodeArray.map(CodeArray => underList.includes(CodeArray)).includes(true)) {
 
-                newUnderList = stringDecoderMaxIsLenOfCodeArray(underList, num+1)
+                newUnderList = listToString(underList, num+1)
                 splittaOpp.splice(splittaOpp.indexOf(underList2), 1, underList2)
             }
             else if (underList == "") {
@@ -45,7 +45,7 @@ function listToString(enTextString, num = 0) {
         return splittaOpp
     }
     else if (CodeArray.map(CodeArray => enTextString.includes(CodeArray)).includes(true)) {
-        splittaOppe = stringDecoderMaxIsLenOfCodeArray(enTextString, num+1)
+        splittaOppe = listToString(enTextString, num+1)
         return [splittaOppe]
         
     }
@@ -90,7 +90,7 @@ function c_click(event) {
     
     sendClick(String(collum), "test")
     //console.log()
-    place(collum)
+    place(collum);
 }
 function place(collum) {
     if (collum >= 0 && collum < dim[0]) {
@@ -103,6 +103,8 @@ function place(collum) {
         }
     }
     Draw()
+    console.log(board);
+    updateBoard(stringToList(board));
 }
 function test_win() {
     for (let i = 0; i < board.length; i++) {
@@ -231,8 +233,12 @@ function sendClick(message, token) {
     }
 }
 
-function updateBoard(board) {
-    
+function updateBoard(newBoard) {
+    console.log(listToString(newBoard))
+    console.log("de to verdiene over må være like hverandre")
+    console.log(newBoard)
+    console.log("")
+    //board = listToString(newBoard);
 }
 
 //template for å sende meldinger til server, og motta svar
@@ -254,7 +260,8 @@ source.addEventListener("message", message => {
   } else if (message.messageType === "id"){
     
   } else if (message.messageType === "boardupdate") {
-    message.message.board
+    updateBoard(message.message.newBoard)
+    console.log("boardupdate")
   }
 })
 
@@ -296,7 +303,7 @@ function sendData(message){
   }
 }
 
-
+//displaye chat
 function displayChat(chatMessage){
   chat.push(chatMessage)
   console.log(chat)
@@ -335,7 +342,7 @@ function requestKeepId(){
     console.log(sessionStorage.getItem("id"))
   }
 }
-
+// id, irrelevant?
 function doFirst(){
   var background = document.getElementById("background");
 
