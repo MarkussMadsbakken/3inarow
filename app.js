@@ -38,7 +38,7 @@ class Game {
     }
   }
 }
-game = new Game([5,5], 2, 4)
+game = new Game([5,5], 4, ["test", "test2"])
 // ------------------ /game ----------------
 
 //starte server
@@ -102,9 +102,9 @@ app.post("/chat/:name/:message", (req,res) => {
 app.post("/boardupdate/:user/:collum", (req, res) => {
   var user = req.params["user"]
   var collum = req.params["collum"]
-  //if (user = game.tokens[game.turn]) {game.place(collum); publishBoard(board)}
+  //if (user = game.tokens[game.turn]) {game.place(collum); publishBoard(game.board, game.tokens)}
   console.log(collum + " fra:" + user)
-  //else {koregere brett tilbake til bruker}
+  //else {publishBoard(game.board, [user])}
 
   //sender respons 
   res.send("recieved");
@@ -117,6 +117,14 @@ function publishServerMessage(message, messageType){
     res.write(`data:{"message":${message},"messageType":"${messageType}"}\n\n`);
   }
   // her må dataen sendes tilbake til app.get gamestring
+}
+
+function publishBoard(board, targets) {
+  //sender board till alle i listen targets
+  //board: 2Darray
+  //tokens: array
+  message = listToString(board)
+  //publishServerMessage(message, "boardUpdate", token)
 }
 
 //index
