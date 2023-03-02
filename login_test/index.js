@@ -41,7 +41,45 @@ function publishLogout(){
     
     xhp.ontimeout = (e) =>{ //connection timed out, resend
       console.log("timeout, try again");
+      sendingData = false;
     }
-  }
+}
 
+function displayGames(games){
+  console.log(games)
+  Object.keys(games).forEach(game => {
+    console.log(game)
+    document.getElementById("showgames").innerHTML = document.getElementById("showgames").innerHTML + "<div class = 'gameBox'>" + "<div class = 'owner'>"+games[game].owner +"</div>"+ "<div class = 'users'>"+games[game].users +"</div>"+"<div class = 'users'>"+game +"</div>"+ '<button id = "join" type = "button" onclick="join('+"'"+game+"'"+')"> join </button>' +"</div>"
+  });
+}
+fetchGames();
 
+function fetchGames(){
+  //returnerer test data
+  //let data = {"KLDM":{"users":"1/2","owner":"test"},"ANCD":{"users":"5/8","owner":"test2"}};
+    if (sendingData){console.log("request cancelled"); return;}
+    sendingData = true;
+  
+    var xhp = new XMLHttpRequest(); // initierer en ny request
+    xhp.responseType = 'text';
+  
+    xhp.open("POST","/getgames",true); //man setter url til meldingen
+    xhp.send();
+
+    xhp.timeout = 2000;
+  
+    xhp.onload = () => {
+      sendingData = false;
+      console.log(xhp.response)
+      displayGames(JSON.parse(xhp.response))
+    }
+    
+    xhp.ontimeout = (e) =>{ //connection timed out, resend
+      console.log("timeout, try again");
+      sendingData = false;
+    }
+}
+
+function join(gameid){
+  console.log(gameid)
+}

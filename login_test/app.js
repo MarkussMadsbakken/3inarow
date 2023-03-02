@@ -10,6 +10,7 @@ var express = require('express');
 const { send } = require('process');
 var app = express();
 
+var lobby = {}
 var users = {"f":{"username": "f"}}; //initierer brukere
 
 //starte server
@@ -55,9 +56,27 @@ app.post('/logout/:token', (req,res) => {
   console.log(users)
 })
 
-app.get('/game', (req,res) => {
-  res.sendFile(path.join(__dirname, 'game.html'))
+app.get('/game/:lobbyId', (req,res) => {
+  let lobbyId = req.params["lobbyId"]
+  if (!lobby.hasOwnProperty(lobbyId)){
+    res.sendFile(path.join(__dirname, 'gameNotFound.html'))
+  } else {
+    res.sendFile(path.join(__dirname, 'game.html'))
+  }
 })
+
+//vise lobbyer til brukeren
+app.post('/getgames', (req,res) => {
+  var tempGames = ""
+  Object.keys(lobby).forEach(game => {
+    tempGames = tempGames + '{"'+game+'":{"users":"test","owner":"'+lobby[game]["owner"]+'"}' +","
+  });
+  tempGames = tempGames.substring(0,tempGames.length - 1); //fjerner komma fra siste element
+  tempGames = tempGames + "}" //legger til } på slutten
+  res.send(tempGames) //sender antall games tilbake til brukeren
+})
+
+createLobby("f") //debug
 
 var databasePath = __dirname+"/very_secure_database.txt"; //hvor databasen ligger
 
@@ -234,7 +253,7 @@ app.get("/serverMessages/:token", async function(req, res){
   })
 })
 
-//lage games
+//lage og slette lobby
 function createLobby(token){
   if (users[token].hasOwnProperty("lobbyId")){
     console.log("has lobby")
@@ -242,16 +261,20 @@ function createLobby(token){
   }
   users[token]["lobbyId"] = generateLobbyId();
   console.log(users[token]["username"] + " has made a game with id " + users[token]["lobbyId"]);
+  lobby[users[token]["lobbyId"]] = {"owner":users[token]["username"]} //lagrer lobby i listen
   return "id:" + users[token]["lobbyId"];
 }
 
-function deleteGame(token){
+function deleteLobby(token){
   if (!users[token].hasOwnProperty("lobbyId")){
     console.log("no lobby")
     return "err: no_lobby"
   }
   console.log(users[token]["username"] + " has deleted a game with id " + users[token]["lobbyId"]);
   let deletedLobby = users[token]["lobbyId"];
+
+  //sletter lobby
+  delete lobby[users[token]["lobbyId"]]
   delete users[token]["lobbyId"];
   return "deleted: " + deletedLobby;
 }
