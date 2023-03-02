@@ -7,6 +7,7 @@ var util = require('util')
 
 var port = 3000
 var express = require('express');
+const { send } = require('process');
 var app = express();
 
 var users = {"f":{"username": "f"}}; //initierer brukere
@@ -47,6 +48,11 @@ app.post('/signup/:username/:password', (req,res) =>{
     let password = req.params["password"];
 
     addUser(username, password, res);
+})
+app.post('/logout/:token', (req,res) => {
+  logOut(req.params["token"]);
+  res.send("logout");
+  console.log(users)
 })
 
 app.get('/game', (req,res) => {
@@ -103,6 +109,10 @@ function countJSONLength(data){ //teller antall ULIKE keys i et JSON objekt
       count++;
   }
   return count;
+}
+
+function logOut(token){
+  delete users[token];
 }
 
 async function checkPassword(username, userpassword,res){ //sjekker passord med verdi lagret i databasen

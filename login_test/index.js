@@ -1,5 +1,7 @@
 token = localStorage.getItem("token");
 
+var sendingData = false;
+
 var source = new EventSource("/serverMessages/" + token);
 source.addEventListener("message", message => {
     console.log(message);
@@ -15,5 +17,31 @@ source.addEventListener("message", message => {
     }
 })
 
+document.getElementById("loggutb").addEventListener("click", publishLogout);
+
+function publishLogout(){
+    let token = localStorage.getItem("token")
+
+    console.log("logout")
+    if (sendingData){return;}
+    sendingData = true;
+  
+    var xhp = new XMLHttpRequest(); // initierer en ny request
+    xhp.responseType = 'text';
+  
+    xhp.open("POST","/logout/"+ token,true); //man setter url til meldingen
+    xhp.send();
+
+    xhp.timeout = 2000;
+  
+    xhp.onload = () => {
+      sendingData = false;
+      console.log(xhp.response);
+    }
+    
+    xhp.ontimeout = (e) =>{ //connection timed out, resend
+      console.log("timeout, try again");
+    }
+  }
 
 
