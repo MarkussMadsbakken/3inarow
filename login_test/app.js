@@ -65,11 +65,16 @@ app.get('/game/:lobbyId', (req,res) => {
   }
 })
 
+//lage lobby
+app.post('/creategame/:token',(req,res) => {
+  res.send(createLobby(req.params["token"]))
+})
+
 //vise lobbyer til brukeren
 app.post('/getgames', (req,res) => {
-  var tempGames = ""
+  var tempGames = "{"
   Object.keys(lobby).forEach(game => {
-    tempGames = tempGames + '{"'+game+'":{"users":"test","owner":"'+lobby[game]["owner"]+'"}' +","
+    tempGames = tempGames +'"'+game+'":{"users":"test","owner":"'+lobby[game]["owner"]+'"}' +","
   });
   tempGames = tempGames.substring(0,tempGames.length - 1); //fjerner komma fra siste element
   tempGames = tempGames + "}" //legger til } på slutten
@@ -247,8 +252,12 @@ app.get("/serverMessages/:token", async function(req, res){
   req.on("close",function(){
     //venter 30000 ms og sletter bruker
     users[token]["timeout"] = setTimeout(() => {
-      console.log("deleting: " + token)
-      delete users[token];
+      deleteLobby(token);
+
+      setTimeout(() =>{ //venter med å slette user, til deletelobby har slettet
+        console.log("deleting: " + token)
+        delete users[token];
+      },"500")
     }, "5000")
   })
 })
@@ -290,3 +299,5 @@ function deleteLobby(token){
 //dictionary med lobbyId og game class
 //dette dictionariet lages når spillet starter, og slettes når spillet er ferdig
 //funksjonen må også sjekke om et spill allerede finnes, og throw err
+
+//unngå at samme bruker logger seg inn to ganger (server kræsjer)

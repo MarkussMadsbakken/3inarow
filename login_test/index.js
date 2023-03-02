@@ -46,6 +46,7 @@ function publishLogout(){
 }
 
 function displayGames(games){
+  document.getElementById("showgames").innerHTML = "";
   console.log(games)
   Object.keys(games).forEach(game => {
     console.log(game)
@@ -83,3 +84,35 @@ function fetchGames(){
 function join(gameid){
   console.log(gameid)
 }
+
+function makegame(){
+  let token = localStorage.getItem("token")
+
+  console.log("logout")
+  if (sendingData){return;}
+  sendingData = true;
+
+  var xhp = new XMLHttpRequest(); // initierer en ny request
+  xhp.responseType = 'text';
+
+  xhp.open("POST","/creategame/"+ token,true); //man setter url til meldingen
+  xhp.send();
+
+  xhp.timeout = 2000;
+
+  xhp.onload = () => {
+    sendingData = false;
+    if (xhp.response.includes("id:")){
+      console.log("id:"+ xhp.response.split(":")[1]); //splitter rundt ":" og setter sessionstorage til verdien etter 
+      fetchGames();
+    }
+    console.log(xhp.response);
+  }
+  
+  xhp.ontimeout = (e) =>{ //connection timed out, resend
+    console.log("timeout, try again");
+    sendingData = false;
+  }
+}
+
+window.setInterval(fetchGames,5000) //henter spill hvert femte sekund
