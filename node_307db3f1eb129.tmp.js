@@ -11,34 +11,26 @@ var app = express();
 let users = Object.create(null);
 
 // ------------------ game ----------------
-class Game {
-  constructor(dim, winn_l, tokens) {
-    // dim: array med 2 verdier, tillsvarer x og y lengden av brettet
-    // winn_l: int > 0, tillsvarer hvor mange av samme frage på rad det skal være før spillet slutter
-    // players: array med en verdi pr spiller, lengden tillsvarer hvor mange spillere er i spillet
-    this.board = [];
-    this.dim = dim
-    for (let i = 0; i < dim[0]; i++) {
-      board.push([])
-    }
-    this.tokens = tokens
-    this.players = tokens.length
-    this.winn_l = winn_l
-    this.turn = 0
-  }
-  place(collum) {
-    if (collum >= 0 && collum < this.dim[0]) {
-        if (this.board[collum].length < this.dim[1]) {
-            this.board[collum].push(this.turn)
-            this.turn ++
-            if (this.turn >= this.players) {
-                this.turn = 0
-            }
-        }
-    }
-  }
+let board = []
+let dim = [5,5]
+for (let i = 0; i < dim[0]; i++) {
+  board.push([])
 }
-game = new Game([5,5], 2, 4)
+let players = 2
+let winn_l = 4
+let turn = 0
+function place(collum) {
+  if (collum >= 0 && collum < dim[0]) {
+      if (board[collum].length < dim[1]) {
+          board[collum].push(turn)
+          turn ++
+          if (turn >= players) {
+              turn = 0
+          }
+      }
+  }
+
+}
 // ------------------ /game ----------------
 
 //starte server
@@ -102,7 +94,7 @@ app.post("/chat/:name/:message", (req,res) => {
 app.post("/boardupdate/:user/:collum", (req, res) => {
   var user = req.params["user"]
   var collum = req.params["collum"]
-  //if (user = game.tokens[game.turn]) {game.place(collum); publishBoard(board)}
+  //if (user = all_users[cur_user]) {place(collum); publishBoard(board)}
   console.log(collum + " fra:" + user)
   //else {koregere brett tilbake til bruker}
 
