@@ -1,51 +1,129 @@
-function stringToList(liste, num = 0) {
+/* tester = [[],[],[0],[[]]]
+function leggtilNull(liste) {
+    console.log(liste)
+    const a = liste.length
+    
+    for (let i = 0; i < a; i++) {
+        underList = liste[i]
+        console.log(underList)
+        
+        if (typeof(underList)=="object") {
+            underList = leggtilNull(underList)  
+        }
+        else {
+            liste.push(0) 
+        }
+        console.log(underList)
+        console.log(liste)
+
+        
+
+    }
+    if (liste.length == 0) {
+        liste.push(0)
+    }
+    return liste
+}
+ny = leggtilNull(tester)
+console.log(ny, "2sdcwcw")
+
+function fjernNull(liste) {
+    console.log(liste)
+    const a = liste.length
+    
+    for (let i = 0; i < a; i++) {
+        underList = liste[i]
+        console.log(underList)
+        
+        if (typeof(underList)=="object") {
+            underList = fjernNull(underList)  
+        }
+        else {
+            liste.pop()
+        }
+        console.log(underList)
+        console.log(liste)
+
+        
+
+    }
+
+    return liste
+}
+
+console.log(fjernNull(ny)) */
+
+
+
+function listToString(liste, num = 0) {
     let CodeArray = ["!","@", "#", "$", "%", "&", "/", "(", ")", "="]
-    let listToString = ""
+    let listToStringEle = ""
 
     for (let i = 0; i < liste.length; i++) {
         underList = liste[i]
         
         if (typeof(underList)=="object") {
-            newEle = stringToList(underList, num+1)
+            newEle = listToString(underList, num+1)
         }
-        else if (typeof(underList)=="string" || typeof(underList=="int")){
+        else if (typeof(underList)=="string" || typeof(underList=="int") ){
             newEle = underList 
         }
-
+ 
         
         if ((i != liste.length - 1) || (liste.length == 1))  {
-            listToString += newEle + CodeArray[num]  
+            listToStringEle += newEle + CodeArray[num]  
         }
         else {
-            listToString += newEle
+            listToStringEle += newEle
         }
 
     }
-    return listToString
+    if (liste.length == 0) {
+        listToStringEle = CodeArray[num]
+    }
+    return listToStringEle
 }
 
-function listToString(enTextString, num = 0) {
+
+function stringToList(enTextString, num = 0) {
     let CodeArray = ["!","@", "#", "$", "%", "&","/", "(", ")","="]  
 
-    if (enTextString.includes(CodeArray[num])) {
+    if (enTextString.length == 1) {
+        return []
+    }
+
+    else if (enTextString.includes(CodeArray[num])) {
 
         let splittaOpp = enTextString.split(CodeArray[num])
+        console.log(splittaOpp)
 
         for (let underList of splittaOpp) {
 
             if (CodeArray.map(CodeArray => underList.includes(CodeArray)).includes(true)) {
 
-                newUnderList = listToString(underList, num+1)
-                splittaOpp.splice(splittaOpp.indexOf(underList2), 1, underList2)
+                newUnderList = stringToList(underList, num+1)
+                
+                splittaOpp.splice(splittaOpp.indexOf(underList), 1, newUnderList)
             }
             else if (underList == "") {
+                if (splittaOpp.length> 1)
+               { 
+
+                console.log("ff")}
                 splittaOpp.splice(splittaOpp.indexOf(underList), 1)
+ 
+            }
+            else{
+                console.log(underList, parseInt(underList), typeof(underList), typeof(parseInt(underList)))
+                newUnderList = parseInt(underList)
+                console.log(newUnderList)
+                splittaOpp.splice(splittaOpp.indexOf(underList), 1, newUnderList)
             }
         }
         return splittaOpp
     }
     else if (CodeArray.map(CodeArray => enTextString.includes(CodeArray)).includes(true)) {
-        splittaOppe = listToString(enTextString, num+1)
+        splittaOppe = stringToList(enTextString, num+1)
         return [splittaOppe]
         
     }
@@ -95,6 +173,11 @@ function c_click(event) {
 function place(collum) {
     if (collum >= 0 && collum < dim[0]) {
         if (board[collum].length < dim[1]) {
+            if (board[collum] == -1){
+                console.log(board)
+                board[collum] = []
+                console.log(board)
+            }
             board[collum].push(turn)
             turn ++
             if (turn >= players) {
@@ -104,7 +187,7 @@ function place(collum) {
     }
     Draw()
     console.log(board);
-    updateBoard(stringToList(board));
+    updateBoard(listToString(board));
 }
 function test_win() {
     for (let i = 0; i < board.length; i++) {
@@ -234,7 +317,7 @@ function sendClick(message, token) {
 }
 
 function updateBoard(newBoard) {
-    console.log(listToString(newBoard))
+    console.log(stringToList(newBoard))
     console.log("de to verdiene over må være like hverandre")
     console.log(newBoard)
     console.log("")

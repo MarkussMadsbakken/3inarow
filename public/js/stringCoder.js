@@ -35,6 +35,9 @@ function listToString(liste, num = 0) {
         }
 
     }
+    if (liste.length == 0) {
+        listToStringEle = CodeArray[num]
+    }
     return listToStringEle
 }
 
@@ -54,6 +57,7 @@ function stringToList(enTextString, num = 0) {
             }
             else if (underList == "") {
                 splittaOpp.splice(splittaOpp.indexOf(underList), 1)
+                
             }
         }
         return splittaOpp
@@ -72,3 +76,24 @@ new2 = listToString(test)
 console.log(new2)
 new3 = stringToList(new2)
 console.log(new3) */
+tester = [[], [],[],[],[]]
+function leggtilNull(liste) {
+    console.log(liste)
+    for (let i = 0; i < liste.length; i++) {
+        underList = liste[i]
+        
+        if (typeof(underList)=="object") {
+            newEle = leggtilNull(underList)
+        }
+        else {
+            underList.push(0) 
+        }
+        console.log(underList)
+        console.log(liste)
+
+        
+
+    }
+    return liste
+}
+console.log(leggtilNull(tester))
