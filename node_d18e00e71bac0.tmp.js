@@ -11,26 +11,34 @@ var app = express();
 let users = Object.create(null);
 
 // ------------------ game ----------------
-let board = []
-let dim = [5,5]
-for (let i = 0; i < dim[0]; i++) {
-  board.push([])
-}
-let players = 2
-let winn_l = 4
-let turn = 0
-function place(collum) {
-  if (collum >= 0 && collum < dim[0]) {
-      if (board[collum].length < dim[1]) {
-          board[collum].push(turn)
-          turn ++
-          if (turn >= players) {
-              turn = 0
-          }
-      }
+class Game {
+  constructor(dim, winn_l, tokens) {
+    // dim: array med 2 verdier, tillsvarer x og y lengden av brettet
+    // winn_l: int > 0, tillsvarer hvor mange av samme frage på rad det skal være før spillet slutter
+    // players: array med en verdi pr spiller, lengden tillsvarer hvor mange spillere er i spillet
+    this.board = [];
+    this.dim = dim
+    for (let i = 0; i < dim[0]; i++) {
+      this.board.push([])
+    }
+    this.tokens = tokens
+    this.players = tokens.length
+    this.winn_l = winn_l
+    this.turn = 0
   }
-
+  place(collum) {
+    if (collum >= 0 && collum < this.dim[0]) {
+        if (this.board[collum].length < this.dim[1]) {
+            this.board[collum].push(this.turn)
+            this.turn ++
+            if (this.turn >= this.players) {
+                this.turn = 0
+            }
+        }
+    }
+  }
 }
+game = new Game([5,5], 4, ["test", "test2"])
 // ------------------ /game ----------------
 
 //starte server
@@ -74,7 +82,7 @@ app.post('/:message', (req,res) => { //lager dictionary. f.eks /:userID/:move
   var message = req.params["message"] //henter verdien til message
   console.log(message)
 
-  publishServerMessage('{"message":"'+ message+'"}', "text");
+  publishServerMessage('{"message":"'+ message+'"}', "text", users);
   //sender respons 
   res.send("recieved");
 })
@@ -87,28 +95,37 @@ app.post("/chat/:name/:message", (req,res) => {
   //sender respons 
   res.send("recieved");
 
-  publishServerMessage('{"name":"'+ name +'","chatMessage":"' + message+'"}',"chat");
+  publishServerMessage('{"name":"'+ name +'","chatMessage":"' + message+'"}',"chat", users);
 })
 
 //update from user
 app.post("/boardupdate/:user/:collum", (req, res) => {
   var user = req.params["user"]
   var collum = req.params["collum"]
-  //if (user = all_users[cur_user]) {place(collum); publishBoard(board)}
+  //finn riktig game -> user.game
+  //if (user = game.tokens[game.turn]) {game.place(collum); publishBoard(game.board, game.tokens)}
   console.log(collum + " fra:" + user)
-  //else {koregere brett tilbake til bruker}
+  //else {publishBoard(game.board, [user])}
 
   //sender respons 
   res.send("recieved");
 })
 
-function publishServerMessage(message, messageType){
-  for (let id in users){
-    let res = users[id];
+function publishServerMessage(message, messageType, targets){
+  for (let token in targets){
+    let res = targets[token];
     console.log(message)
     res.write(`data:{"message":${message},"messageType":"${messageType}"}\n\n`);
   }
   // her må dataen sendes tilbake til app.get gamestring
+}
+
+function publishBoard(board, targets) {
+  //sender board till alle i listen targets
+  //board: 2Darray
+  //tokens: array
+  message = listToString(board)
+  publishServerMessage(message, "boardUpdate", targets)
 }
 
 //index

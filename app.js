@@ -19,7 +19,7 @@ class Game {
     this.board = [];
     this.dim = dim
     for (let i = 0; i < dim[0]; i++) {
-      board.push([])
+      this.board.push([])
     }
     this.tokens = tokens
     this.players = tokens.length
@@ -82,7 +82,7 @@ app.post('/:message', (req,res) => { //lager dictionary. f.eks /:userID/:move
   var message = req.params["message"] //henter verdien til message
   console.log(message)
 
-  publishServerMessage('{"message":"'+ message+'"}', "text");
+  publishServerMessage('{"message":"'+ message+'"}', "text", users);
   //sender respons 
   res.send("recieved");
 })
@@ -95,13 +95,14 @@ app.post("/chat/:name/:message", (req,res) => {
   //sender respons 
   res.send("recieved");
 
-  publishServerMessage('{"name":"'+ name +'","chatMessage":"' + message+'"}',"chat");
+  publishServerMessage('{"name":"'+ name +'","chatMessage":"' + message+'"}',"chat", users);
 })
 
 //update from user
 app.post("/boardupdate/:user/:collum", (req, res) => {
   var user = req.params["user"]
   var collum = req.params["collum"]
+  //finn riktig game -> user.game
   //if (user = game.tokens[game.turn]) {game.place(collum); publishBoard(game.board, game.tokens)}
   console.log(collum + " fra:" + user)
   //else {publishBoard(game.board, [user])}
@@ -110,9 +111,9 @@ app.post("/boardupdate/:user/:collum", (req, res) => {
   res.send("recieved");
 })
 
-function publishServerMessage(message, messageType){
-  for (let id in users){
-    let res = users[id];
+function publishServerMessage(message, messageType, targets){
+  for (let token in targets){
+    let res = targets[token];
     console.log(message)
     res.write(`data:{"message":${message},"messageType":"${messageType}"}\n\n`);
   }
@@ -124,7 +125,7 @@ function publishBoard(board, targets) {
   //board: 2Darray
   //tokens: array
   message = listToString(board)
-  //publishServerMessage(message, "boardUpdate", token)
+  publishServerMessage(message, "boardUpdate", targets)
 }
 
 //index
