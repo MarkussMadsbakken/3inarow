@@ -49,6 +49,10 @@ app.post('/signup/:username/:password', (req,res) =>{
     addUser(username, password, res);
 })
 
+app.get('/game', (req,res) => {
+  res.sendFile(path.join(__dirname, 'game.html'))
+})
+
 var databasePath = __dirname+"/very_secure_database.txt"; //hvor databasen ligger
 
 const readFile = util.promisify(fs.readFile) //gjør at man kan gjøre noe med dataen etter den er hentet
@@ -133,9 +137,24 @@ async function checkPassword(username, userpassword,res){ //sjekker passord med 
 
 //lager en ny token
 function generateToken(){
-  let length = 8
+  let length = 12
   let result = "";
   const char = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  const charlenght = char.length;
+  let i = 0;
+
+  while (i < length){
+    result += char.charAt(Math.floor(Math.random()*charlenght));
+    i += 1;
+  }
+  return result;
+}
+
+//lage lobbyId
+function generateLobbyId(){
+  let length = 4;
+  let result = "";
+  const char = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   const charlenght = char.length;
   let i = 0;
 
@@ -205,9 +224,36 @@ app.get("/serverMessages/:token", async function(req, res){
   })
 })
 
+//lage games
+function createLobby(token){
+  if (users[token].hasOwnProperty("lobbyId")){
+    console.log("has lobby")
+    return "err: has_game"
+  }
+  users[token]["lobbyId"] = generateLobbyId();
+  console.log(users[token]["username"] + " has made a game with id " + users[token]["lobbyId"]);
+  return "id:" + users[token]["lobbyId"];
+}
+
+function deleteGame(token){
+  if (!users[token].hasOwnProperty("lobbyId")){
+    console.log("no lobby")
+    return "err: no_lobby"
+  }
+  console.log(users[token]["username"] + " has deleted a game with id " + users[token]["lobbyId"]);
+  let deletedLobby = users[token]["lobbyId"];
+  delete users[token]["lobbyId"];
+  return "deleted: " + deletedLobby;
+}
+
 //vi lagrer token som slags id, vi trenger ikke resid.
 //når man skal listene til event listener, trenger man id, og man blir "kicka" hvis man ikke har token.
 //users[token][res].write(servermessage)
 
 
 //hvis man bytter fane (kanskje også hvis man mister connection?)  skjer ikke "close" før serveren stopper å motta pings fra bruker, og tar dermed mye lengre tid
+
+
+//dictionary med lobbyId og game class
+//dette dictionariet lages når spillet starter, og slettes når spillet er ferdig
+//funksjonen må også sjekke om et spill allerede finnes, og throw err
