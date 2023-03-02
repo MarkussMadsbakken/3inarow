@@ -109,7 +109,8 @@ function stringToList(enTextString, num = 0) {
                 if (splittaOpp.length> 1)
                { 
 
-                //console.log("ff")}
+                //console.log("ff")
+            }
                 splittaOpp.splice(splittaOpp.indexOf(underList), 1)
  
             }
