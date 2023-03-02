@@ -99,16 +99,18 @@ app.post("/chat/:name/:message", (req,res) => {
 })
 
 //update from user
-app.post("/boardupdate/:user/:collum", (req, res) => {
-  var user = req.params["user"]
+app.post("/boardupdate/:token/:collum", (req, res) => {
+  var token = req.params["user"]
   var collum = req.params["collum"]
   //finn riktig game -> user.game
   //if (user = game.tokens[game.turn]) {game.place(collum); publishBoard(game.board, game.tokens)}
-  console.log(collum + " fra:" + user)
+  console.log(collum + " fra:" + token)
+  game.place(collum)
   //else {publishBoard(game.board, [user])}
 
   //sender respons 
   res.send("recieved");
+  publishBoard(game.board,users);
 })
 
 function publishServerMessage(message, messageType, targets){
@@ -122,11 +124,90 @@ function publishServerMessage(message, messageType, targets){
 
 function publishBoard(board, targets) {
   //sender board till alle i listen targets
-  //board: 2Darray
+  //board: 2Darray+
   //tokens: array
   message = listToString(board)
-  publishServerMessage(message, "boardUpdate", targets)
+  //message = listToString(board)
+  publishServerMessage('{"board":"'+message+'"}', "boardUpdate", targets)
 }
+
+function listToString(liste, num = 0) {
+  let CodeArray = ["!","@", "#", "$", "%", "&", "/", "(", ")", "="]
+  let listToStringEle = ""
+
+  for (let i = 0; i < liste.length; i++) {
+      underList = liste[i]
+      
+      if (typeof(underList)=="object") {
+          newEle = listToString(underList, num+1)
+      }
+      else if (typeof(underList)=="string" || typeof(underList=="int") ){
+          newEle = underList 
+      }
+
+      
+      if ((i != liste.length - 1) || (liste.length == 1))  {
+          listToStringEle += newEle + CodeArray[num]  
+      }
+      else {
+          listToStringEle += newEle
+      }
+
+  }
+  if (liste.length == 0) {
+      listToStringEle = CodeArray[num]
+  }
+  return listToStringEle
+}
+
+
+function stringToList(enTextString, num = 0) {
+  let CodeArray = ["!","@", "#", "$", "%", "&","/", "(", ")","="]  
+
+  if (enTextString.length == 1) {
+      return []
+  }
+
+  else if (enTextString.includes(CodeArray[num])) {
+
+      let splittaOpp = enTextString.split(CodeArray[num])
+      //console.log(splittaOpp)
+
+      for (let underList of splittaOpp) {
+
+          if (CodeArray.map(CodeArray => underList.includes(CodeArray)).includes(true)) {
+
+              newUnderList = stringToList(underList, num+1)
+              
+              splittaOpp.splice(splittaOpp.indexOf(underList), 1, newUnderList)
+          }
+          else if (underList == "") {
+              if (splittaOpp.length> 1)
+             { 
+
+              //console.log("ff")
+          }
+              splittaOpp.splice(splittaOpp.indexOf(underList), 1)
+
+          }
+          else{
+              //console.log(underList, parseInt(underList), typeof(underList), typeof(parseInt(underList)))
+              newUnderList = parseInt(underList)
+             //console.log(newUnderList)
+              splittaOpp.splice(splittaOpp.indexOf(underList), 1, newUnderList)
+          }
+      }
+      return splittaOpp
+  }
+  else if (CodeArray.map(CodeArray => enTextString.includes(CodeArray)).includes(true)) {
+      splittaOppe = stringToList(enTextString, num+1)
+      return [splittaOppe]
+      
+  }
+
+  return "teksten kan ikke gjøre om til liste" + enTextString + CodeArray.map(CodeArray => enTextString.includes(CodeArray)).includes(true)
+}
+
 
 //index
 

@@ -171,7 +171,7 @@ function c_click(event) {
     
     sendClick(String(collum), "test")
     //console.log()
-    place(collum);
+    //place(collum);
 }
 function place(collum) {
     if (collum >= 0 && collum < dim[0]) {
@@ -320,10 +320,9 @@ function sendClick(message, token) {
 }
 
 function updateBoard(newBoard) {
-    console.log(stringToList(newBoard))
-    console.log("de to verdiene over må være like hverandre")
-    console.log(newBoard)
-    console.log("")
+    board = stringToList(newBoard)
+    Draw()
+
     //board = listToString(newBoard);
 }
 
@@ -345,8 +344,9 @@ source.addEventListener("message", message => {
     displayChat(message.message)
   } else if (message.messageType === "id"){
     
-  } else if (message.messageType === "boardupdate") {
-    updateBoard(message.message.newBoard)
+  } else if (message.messageType === "boardUpdate") {
+    console.log(message.message.board)
+    updateBoard(message.message.board)
     console.log("boardupdate")
   }
 })
