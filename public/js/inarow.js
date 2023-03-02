@@ -95,7 +95,7 @@ function stringToList(enTextString, num = 0) {
     else if (enTextString.includes(CodeArray[num])) {
 
         let splittaOpp = enTextString.split(CodeArray[num])
-        console.log(splittaOpp)
+        //console.log(splittaOpp)
 
         for (let underList of splittaOpp) {
 
@@ -114,9 +114,9 @@ function stringToList(enTextString, num = 0) {
  
             }
             else{
-                console.log(underList, parseInt(underList), typeof(underList), typeof(parseInt(underList)))
+                //console.log(underList, parseInt(underList), typeof(underList), typeof(parseInt(underList)))
                 newUnderList = parseInt(underList)
-                console.log(newUnderList)
+               //console.log(newUnderList)
                 splittaOpp.splice(splittaOpp.indexOf(underList), 1, newUnderList)
             }
         }
