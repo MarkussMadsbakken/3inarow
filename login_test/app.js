@@ -141,7 +141,7 @@ function logOut(token){
     console.log("deleting: " + token)
     delete users[token];
   },"500")
-  
+
 }
 
 async function checkPassword(username, userpassword,res){ //sjekker passord med verdi lagret i databasen
@@ -162,7 +162,14 @@ async function checkPassword(username, userpassword,res){ //sjekker passord med 
 
     console.log(db)
     if (db[username].password === userpassword){ //sjekker om passorder stemmer med det fra brukeren
-
+      console.log("2")
+      Object.values(users).forEach(user => {
+        if (username === user["username"]){
+          res.send("user already logged in");
+          return;
+        }
+      });
+      
       //lager ny token
       let newToken = generateToken();
       users[newToken] = {"username": username};
@@ -313,3 +320,5 @@ function deleteLobby(token){ //sletter lobby
 //funksjonen må også sjekke om et spill allerede finnes, og throw err
 
 //unngå at samme bruker logger seg inn to ganger (server kræsjer)
+
+//logout bug er fikset på en jævla retard måte men det fungerer. Fiks det i fremtiden.
