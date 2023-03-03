@@ -10,5 +10,6 @@ passord for admin er admin (i sha256)
 --begin
 {
     "admin": {"password": "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918"}
+    ,"Erik": {"password": "1f10cc9998f425f2c2e7f57379ba842c6171ef99d2b5d49e7da333f70d524159"}
 }
 --end
