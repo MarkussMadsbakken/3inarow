@@ -54,8 +54,8 @@ function publishLogin(username, password){
       sendingData = false;
 
       if (xhp.response.includes("login:")){
-        localStorage.setItem("token",xhp.response.split(":")[1]); //splitter rundt ":" og setter sessionstorage til verdien etter 
-        console.log(localStorage.getItem("token"));
+        sessionStorage.setItem("token",xhp.response.split(":")[1]); //splitter rundt ":" og setter sessionstorage til verdien etter 
+        console.log(sessionStorage.getItem("token"));
         window.location.href = "/"
       }
 

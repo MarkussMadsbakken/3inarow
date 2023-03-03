@@ -13,17 +13,18 @@ __For å teste med mer enn 5 brukere må man åpne en annen nettleser (f.eks fir
 
 ### To do:
 * ~~sende data fra spiller til server (bare oppdateringer)~~
-* server oppdaterer spillere på hvert move (nesten ferdig)
-* oversette gamestring fra array til string og tilbake
+* ~~server oppdaterer spillere på hvert move~~
+* ~~oversette gamestring fra array til string og tilbake~~
 * ~~separere brukere~~ og holde styr på hvem sin tur det er.
 * sørge for at to brukere med samme id ikke kan eksistere
 * ~~lage metode for å beholde navn serverid med localstorage (eller session)~~
-* unngå at samme bruker kan logge seg inn flere ganger samtidig
+* ~~unngå at samme bruker kan logge seg inn flere ganger samtidig~~
 * oppdatere hvor mange spillere som er med, og hvor mange som venter på å bli med. Slags køsystem
 * ~~backend server. node.js~~
 * ~~chat, lett å lage etter vanlig gameupdate~~
 * lage egene spillrom, hvor man kan endre innstillinger
-* ~~innlogging og lagre passord i database ~~
+* ~~innlogging og lagre passord i database~~
+* endre fra sessionstorage til localstorage (debug)
 * spar plass ved uglify og beautify (burde lagre originalfilene et sted) https://beautifier.io/ og https://skalman.github.io/UglifyJS-online/
 
 

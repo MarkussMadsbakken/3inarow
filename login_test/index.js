@@ -1,4 +1,4 @@
-token = localStorage.getItem("token");
+token = sessionStorage.getItem("token");
 
 var sendingData = false;
 
@@ -20,7 +20,7 @@ source.addEventListener("message", message => {
 document.getElementById("loggutb").addEventListener("click", publishLogout);
 
 function publishLogout(){
-    let token = localStorage.getItem("token")
+    let token = sessionStorage.getItem("token")
 
     console.log("logout")
     if (sendingData){return;}
@@ -86,7 +86,7 @@ function join(gameid){
 }
 
 function makegame(){
-  let token = localStorage.getItem("token")
+  let token = sessionStorage.getItem("token")
 
   console.log("logout")
   if (sendingData){return;}

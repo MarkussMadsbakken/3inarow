@@ -1,4 +1,4 @@
-token = localStorage.getItem("token");
+token = sessionStorage.getItem("token");
 
 var source = new EventSource("/serverMessages/" + token);
 source.addEventListener("message", message => {
