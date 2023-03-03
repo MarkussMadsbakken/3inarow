@@ -5,6 +5,10 @@ body {
     font-family: Helvetica;
     overflow-y: hidden; /* Hide vertical scrollbar */
     overflow-x: hidden; /* Hide horizontal scrollbar */
+    font-family: monospace;
+}
+body * {
+    font-family: inherit;
 }
 .gamewrapper {
     position: absolute;
@@ -12,6 +16,8 @@ body {
     top: 50px;
     width: 80vw;
     height: calc(100vh - 50px);
+    display: flex;
+    align-items: center;
 }
 .chat {
     position: absolute;
@@ -48,7 +54,6 @@ canvas {
     position: relative;
     top: 0;
     width: 100%;
-   /*  padding: 10px; */
     height: 50px;
 }
 
@@ -76,7 +81,6 @@ canvas {
     color: #eaeaea;
     left: 0;
     width: 98.5%;
-    font-family: Helvetica;
     text-align: center;
     letter-spacing: 0.2px;
     padding-top: 14px;
@@ -124,7 +128,6 @@ input:focus{
 
 .chatName{
     display: inline-block;
-    font-family: Helvetica;
     font-weight: bold;
     font-size: 0.9vw;
     margin-top: 1vw; 

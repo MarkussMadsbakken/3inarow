@@ -328,8 +328,6 @@ function updateBoard(newBoard) {
 
 //template for å sende meldinger til server, og motta svar
 
-document.getElementById("test_button").onclick = function(){sendData("test")};
-
 var source = new EventSource("/serverMessages");
 source.addEventListener("message", message => {
   var message = JSON.parse(message.data); //gjør om til dictionary
