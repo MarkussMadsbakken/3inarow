@@ -36,7 +36,7 @@ function publishLogout(){
   
     xhp.onload = () => {
       sendingData = false;
-      console.log(xhp.response);
+      window.location.href = "/login"
     }
     
     xhp.ontimeout = (e) =>{ //connection timed out, resend

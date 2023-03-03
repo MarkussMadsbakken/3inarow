@@ -136,7 +136,12 @@ function countJSONLength(data){ //teller antall ULIKE keys i et JSON objekt
 }
 
 function logOut(token){
-  delete users[token];
+  deleteLobby(token);
+  setTimeout(() =>{ //venter med å slette user, til deletelobby har slettet
+    console.log("deleting: " + token)
+    delete users[token];
+  },"500")
+
 }
 
 async function checkPassword(username, userpassword,res){ //sjekker passord med verdi lagret i databasen
@@ -157,7 +162,14 @@ async function checkPassword(username, userpassword,res){ //sjekker passord med 
 
     console.log(db)
     if (db[username].password === userpassword){ //sjekker om passorder stemmer med det fra brukeren
-
+      console.log("2")
+      Object.values(users).forEach(user => {
+        if (username === user["username"]){
+          res.send("user already logged in");
+          return;
+        }
+      });
+      
       //lager ny token
       let newToken = generateToken();
       users[newToken] = {"username": username};
@@ -250,6 +262,7 @@ app.get("/serverMessages/:token", async function(req, res){
   }
   console.log("user listening to events: " + token); //dette slettes serverside
   req.on("close",function(){
+    try { 
     //venter 30000 ms og sletter bruker
     users[token]["timeout"] = setTimeout(() => {
       deleteLobby(token);
@@ -258,13 +271,16 @@ app.get("/serverMessages/:token", async function(req, res){
         console.log("deleting: " + token)
         delete users[token];
       },"500")
-    }, "5000")
+    }, "5000")} catch {
+    //hvis brukeren av en eller annen grunn ikke har token:
+    res.write(`data:{"message":"no_token","messageType":"err"}\n\n`); //sender error message
+    }
   })
 })
 
 //lage og slette lobby
-function createLobby(token){
-  if (users[token].hasOwnProperty("lobbyId")){
+function createLobby(token){ //lager lobby
+  if (users[token].hasOwnProperty("lobbyId")){ //hvis brukeren allerede har ett game
     console.log("has lobby")
     return "err: has_game"
   }
@@ -274,10 +290,13 @@ function createLobby(token){
   return "id:" + users[token]["lobbyId"];
 }
 
-function deleteLobby(token){
-  if (!users[token].hasOwnProperty("lobbyId")){
+function deleteLobby(token){ //sletter lobby
+  try {if (!users[token].hasOwnProperty("lobbyId")){ //hvis brukeren ikke har lobby
     console.log("no lobby")
     return "err: no_lobby"
+  }}catch {
+    //hvis brukeren ikke har token
+    return "err: no_token"
   }
   console.log(users[token]["username"] + " has deleted a game with id " + users[token]["lobbyId"]);
   let deletedLobby = users[token]["lobbyId"];
@@ -301,3 +320,5 @@ function deleteLobby(token){
 //funksjonen må også sjekke om et spill allerede finnes, og throw err
 
 //unngå at samme bruker logger seg inn to ganger (server kræsjer)
+
+//logout bug er fikset på en jævla retard måte men det fungerer. Fiks det i fremtiden.
