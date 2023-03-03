@@ -136,6 +136,7 @@ function countJSONLength(data){ //teller antall ULIKE keys i et JSON objekt
 }
 
 function logOut(token){
+  users[token]
   delete users[token];
 }
 
@@ -250,6 +251,7 @@ app.get("/serverMessages/:token", async function(req, res){
   }
   console.log("user listening to events: " + token); //dette slettes serverside
   req.on("close",function(){
+    try {
     //venter 30000 ms og sletter bruker
     users[token]["timeout"] = setTimeout(() => {
       deleteLobby(token);
@@ -258,13 +260,16 @@ app.get("/serverMessages/:token", async function(req, res){
         console.log("deleting: " + token)
         delete users[token];
       },"500")
-    }, "5000")
+    }, "5000")} catch {
+    //hvis brukeren av en eller annen grunn ikke har token:
+    res.write(`data:{"message":"no_token","messageType":"err"}\n\n`); //sender error message
+    }
   })
 })
 
 //lage og slette lobby
-function createLobby(token){
-  if (users[token].hasOwnProperty("lobbyId")){
+function createLobby(token){ //lager lobby
+  if (users[token].hasOwnProperty("lobbyId")){ //hvis brukeren allerede har ett game
     console.log("has lobby")
     return "err: has_game"
   }
@@ -274,8 +279,8 @@ function createLobby(token){
   return "id:" + users[token]["lobbyId"];
 }
 
-function deleteLobby(token){
-  if (!users[token].hasOwnProperty("lobbyId")){
+function deleteLobby(token){ //sletter lobby
+  if (!users[token].hasOwnProperty("lobbyId")){ //hvis brukeren ikke har lobby
     console.log("no lobby")
     return "err: no_lobby"
   }
