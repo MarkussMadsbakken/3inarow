@@ -4,9 +4,7 @@ var sendingData = false;
 
 var source = new EventSource("/serverMessages/" + token);
 source.addEventListener("message", message => {
-    console.log(message);
     var message = JSON.parse(message.data); //gjør om til dictionary
-    console.log(message)
     //console.log("type: "+message.messageType)
     //console.log("message: "+message.message) 
     if (message.messageType === "err"){
@@ -22,7 +20,6 @@ document.getElementById("loggutb").addEventListener("click", publishLogout);
 function publishLogout(){
     let token = sessionStorage.getItem("token")
 
-    console.log("logout")
     if (sendingData){return;}
     sendingData = true;
   
@@ -47,9 +44,7 @@ function publishLogout(){
 
 function displayGames(games){
   document.getElementById("showgames").innerHTML = "";
-  console.log(games)
   Object.keys(games).forEach(game => {
-    console.log(game)
     document.getElementById("showgames").innerHTML = document.getElementById("showgames").innerHTML + "<div class = 'gameBox'>" + "<div class = 'owner'>"+games[game].owner +"</div>"+ "<div class = 'users'>"+games[game].users +"</div>"+"<div class = 'users'>"+game +"</div>"+ '<button id = "join" type = "button" onclick="join('+"'"+game+"'"+')"> join </button>' +"</div>"
   });
 }
@@ -71,7 +66,6 @@ function fetchGames(){
   
     xhp.onload = () => {
       sendingData = false;
-      console.log(xhp.response)
       displayGames(JSON.parse(xhp.response))
     }
     
@@ -87,8 +81,6 @@ function join(gameid){
 
 function makegame(){
   let token = sessionStorage.getItem("token")
-
-  console.log("logout")
   if (sendingData){return;}
   sendingData = true;
 
@@ -103,10 +95,8 @@ function makegame(){
   xhp.onload = () => {
     sendingData = false;
     if (xhp.response.includes("id:")){
-      console.log("id:"+ xhp.response.split(":")[1]); //splitter rundt ":" og setter sessionstorage til verdien etter 
       fetchGames();
     }
-    console.log(xhp.response);
   }
   
   xhp.ontimeout = (e) =>{ //connection timed out, resend

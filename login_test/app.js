@@ -7,7 +7,6 @@ var util = require('util')
 
 var port = 3000
 var express = require('express');
-const { send } = require('process');
 var app = express();
 
 var lobby = {}
@@ -322,3 +321,11 @@ function deleteLobby(token){ //sletter lobby
 //unngå at samme bruker logger seg inn to ganger (server kræsjer)
 
 //logout bug er fikset på en jævla retard måte men det fungerer. Fiks det i fremtiden.
+
+//når man går ut av game, må man fjernes fra listen. Gjøre det umilig å joine to games samtidig
+
+//lobby[gameid]["users"][token] = users[token][username] - når lages
+//delete lobby[gameid]["users][token] - slettes
+//hvis man joiner ett annet game slettes det andre gamet?
+
+//hvis man logger inn, går tilbae til /login, kræsjer serveren. Kanskje logge ut evt bruker når get /login?
