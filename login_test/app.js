@@ -136,8 +136,12 @@ function countJSONLength(data){ //teller antall ULIKE keys i et JSON objekt
 }
 
 function logOut(token){
-  users[token]
-  delete users[token];
+  deleteLobby(token);
+  setTimeout(() =>{ //venter med å slette user, til deletelobby har slettet
+    console.log("deleting: " + token)
+    delete users[token];
+  },"500")
+  
 }
 
 async function checkPassword(username, userpassword,res){ //sjekker passord med verdi lagret i databasen
@@ -251,7 +255,7 @@ app.get("/serverMessages/:token", async function(req, res){
   }
   console.log("user listening to events: " + token); //dette slettes serverside
   req.on("close",function(){
-    try {
+    try { 
     //venter 30000 ms og sletter bruker
     users[token]["timeout"] = setTimeout(() => {
       deleteLobby(token);
@@ -280,9 +284,12 @@ function createLobby(token){ //lager lobby
 }
 
 function deleteLobby(token){ //sletter lobby
-  if (!users[token].hasOwnProperty("lobbyId")){ //hvis brukeren ikke har lobby
+  try {if (!users[token].hasOwnProperty("lobbyId")){ //hvis brukeren ikke har lobby
     console.log("no lobby")
     return "err: no_lobby"
+  }}catch {
+    //hvis brukeren ikke har token
+    return "err: no_token"
   }
   console.log(users[token]["username"] + " has deleted a game with id " + users[token]["lobbyId"]);
   let deletedLobby = users[token]["lobbyId"];
