@@ -167,11 +167,9 @@ function c_click(event) {
     let x = event.clientX/sw - ww/2 + dim[0]/2*tile_size;
     let y = event.clientY/sh - wh/2 - dim[1]/2*tile_size;
     let collum = Math.floor(x/tile_size)
-
     
     sendClick(String(collum), "test")
-    //console.log()
-    //place(collum);
+    //place()
 }
 function place(collum) {
     if (collum >= 0 && collum < dim[0]) {
@@ -344,8 +342,12 @@ source.addEventListener("message", message => {
     
   } else if (message.messageType === "boardUpdate") {
     console.log(message.message.board)
+    console.log("+++")
     updateBoard(message.message.board)
     console.log("boardupdate")
+  } else if (message.messageType === "boardMake") {
+    dim = stringToList(message.message.dim)
+    console.log(dim)
   }
 })
 
@@ -428,10 +430,8 @@ function requestKeepId(){
 }
 // id, irrelevant?
 function doFirst(){
-  var background = document.getElementById("background");
-
   if (sessionStorage.getItem("id") === null || sessionStorage.getItem("name")) {
-    background.style.filter = "blur(10px) saturate(0.8) grayscale(0.2)";
+
 
     if (!(sessionStorage.getItem("id") === null)){
       requestKeepId();
@@ -449,10 +449,47 @@ getName.addEventListener("keydown",function(event){
     getName.value = ""; 
     console.log(sessionStorage.getItem("name"))
     document.getElementById("popup").style.visibility = "hidden";
-    document.getElementById("background").style.filter = "none";
-    
   }
 })
 
 window.addEventListener("load", doFirst, false);
 
+
+//--------------------- Form -----------------------
+var startingGame = false;
+form = document.getElementsByClassName("lobbyForm")[0]
+form.addEventListener("submit", start_game)
+function start_game(event) {
+    event.preventDefault()
+
+    if (startingGame){return;} //for å stoppe å lage flere requests samtidig
+    startingGame = true;
+
+    var message = "/game_start/" + String(form.x.value) + "/" + String(form.y.value) + "/" + String(form.l.value)
+    console.log(message)
+    form.style.visibility = "hidden"
+    canvas.style.visibility = "visible"
+
+    var xhp = new XMLHttpRequest(); // initierer en ny request
+    xhp.open("POST",message,true); //man setter url til meldingen
+    xhp.send();
+    xhp.timeout = 2000;
+    xhp.onload = () => {
+        sendingData = false;
+    }
+    xhp.ontimeout = (e) =>{ //connection timed out, resend
+        console.log("timout for " + message)
+        //resend
+        console.log("resending data");
+        var backupxhp = new XMLHttpRequest(); // initierer en ny request
+        backupxhp.open("POST","/"+message,true);
+        backupxhp.send();
+    
+        backupxhp.onload = () => {
+          sendingData = false; //kanskje vise melding om connection issues
+        }
+        backupxhp.ontimeout = (e) => { //connection terminated, refresh page
+          console.log("connection timed out");
+        }
+    }
+}

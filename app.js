@@ -38,7 +38,7 @@ class Game {
     }
   }
 }
-game = new Game([5,5], 4, ["test", "test2"])
+let game = new Game([5,5], 4, ["test", "test2"])
 // ------------------ /game ----------------
 
 //starte server
@@ -113,6 +113,19 @@ app.post("/boardupdate/:token/:collum", (req, res) => {
   publishBoard(game.board,users);
 })
 
+//start game
+app.post("/game_start/:x/:y/:l", (req, res) => {
+  var dim = [parseInt(req.params["x"]), parseInt(req.params["y"])]
+  var winn_l = req.params["l"]
+
+  console.log("New game:", dim, winn_l)
+  game = new Game(dim, winn_l, ["test", "test2"])
+
+  res.send("recieved")
+  makeBoard(dim, users)
+  publishBoard(game.board,users)
+})
+
 function publishServerMessage(message, messageType, targets){
   for (let token in targets){
     let res = targets[token];
@@ -129,6 +142,10 @@ function publishBoard(board, targets) {
   message = listToString(board)
   //message = listToString(board)
   publishServerMessage('{"board":"'+message+'"}', "boardUpdate", targets)
+}
+function makeBoard(dim, targets) {
+  message = listToString(dim)
+  publishServerMessage('{"dim":"'+message+'"}', "boardMake", targets)
 }
 
 function listToString(liste, num = 0) {
