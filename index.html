@@ -8,17 +8,21 @@
     </head>
 
     <body>
-        <div id = background>
         <div class = "nav">
-             
             <a onclick = "goHome()"> Hjem </a> <!-- her kan vi sende en melding til serveren om at brukeren ønsker å gå tilbake-->
             <a onclick = "copyGameLink()"> firepårad/gameid </a> <!-- kopiere lenke når trykket-->
             <div class = "sitetitle"> lobby: lobbyname </div> 
-            
         </div>
 
+        <form class="lobbyForm">
+            <label>X:<input type="number" min="5" max="16" value="7" name="x"></label>
+            <label>Y:<input type="number" min="5" max="16" value="7" name="y"></label>
+            <label>Winn length: <input type="number" min="3" max="10" value="4" name="l"></label>
+            <input type="submit" value="Start game">
+        </form>
+
         <div class = "maincontent">
-            <div class = "gamewrapper" >
+            <div class = "gamewrapper" style="visibility: hidden;">
                 <canvas id = "rowgame"  width="400px" height="400px" onclick="c_click(event)">
             </div>
             <div class = "chat">
@@ -38,7 +42,7 @@
         <script src = public/js/inarow.js></script>
         <script src = public/js/nodetest.js></script>
         -->
-        </div>
+
         <div id = "popup">
             <div id = "messageText">
                 Skriv inn navn
