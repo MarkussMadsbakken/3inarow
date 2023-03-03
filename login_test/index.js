@@ -82,7 +82,7 @@ function fetchGames(){
 }
 
 function join(gameid){
-  console.log(gameid)
+  window.location.href = "/game/"+gameid;
 }
 
 function makegame(){

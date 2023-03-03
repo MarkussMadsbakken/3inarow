@@ -52,7 +52,7 @@ app.post('/signup/:username/:password', (req,res) =>{
 })
 app.post('/logout/:token', (req,res) => {
   logOut(req.params["token"]);
-  res.send("logout");
+  res.send("logout"); 
   console.log(users)
 })
 
