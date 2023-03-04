@@ -64,6 +64,23 @@ app.get('/game/:lobbyId', (req,res) => {
   }
 })
 
+//joine lobby
+app.post('/gameAuth/:lobbyId/:token',(req,res) =>{
+  let lobbyId = req.params["lobbyId"];
+  let token = req.params["token"];
+
+  if (!users.hasOwnProperty(token)){ //hvis ingen bruker har token
+    res.send("no_token")
+    return;
+  } else if (!lobby.hasOwnProperty(lobbyId)){ //lobbyen burde finnes, men just in case
+    res.send("no_game");
+    return;
+  }
+
+  //legg til bruker i brukere som er med i lobbyen
+  res.send(addUserToLobby(token, lobbyId))
+})
+
 //lage lobby
 app.post('/creategame/:token',(req,res) => {
   res.send(createLobby(req.params["token"]))
@@ -259,11 +276,13 @@ app.get("/serverMessages/:token", async function(req, res){
     console.log(token + " timed out, but reestablished connection")
     clearTimeout(users[token]["timeout"]) //clearer timeout
   }
+  
   console.log("user listening to events: " + token); //dette slettes serverside
   req.on("close",function(){
-    try { 
+    try { //funny try catch block i love him so much :)
     //venter 30000 ms og sletter bruker
     users[token]["timeout"] = setTimeout(() => {
+      kickUser(token);
       deleteLobby(token);
 
       setTimeout(() =>{ //venter med å slette user, til deletelobby har slettet
@@ -286,6 +305,7 @@ function createLobby(token){ //lager lobby
   users[token]["lobbyId"] = generateLobbyId();
   console.log(users[token]["username"] + " has made a game with id " + users[token]["lobbyId"]);
   lobby[users[token]["lobbyId"]] = {"owner":users[token]["username"]} //lagrer lobby i listen
+  lobby[users[token]["lobbyId"]]["users"] = {} //lagrer tom array til brukere
   return "id:" + users[token]["lobbyId"];
 }
 
@@ -306,6 +326,22 @@ function deleteLobby(token){ //sletter lobby
   return "deleted: " + deletedLobby;
 }
 
+function kickUser(token){
+  Object.values(lobby).forEach(game => {
+    if (game.users.hasOwnProperty(token)){
+      delete game["users"][token]
+    }
+    console.log("after:")
+    console.log(lobby)
+  });
+}
+
+async function addUserToLobby(token, lobbyId){
+  kickUser(token); //kicker slik at brukeren ikke er med i to games samtidig
+  lobby[lobbyId]["users"][token] = users[token]["username"] //lagrer token og brukernavn i lobbyen
+  return "auth" //returnerer
+}
+
 //vi lagrer token som slags id, vi trenger ikke resid.
 //når man skal listene til event listener, trenger man id, og man blir "kicka" hvis man ikke har token.
 //users[token][res].write(servermessage)
@@ -324,8 +360,6 @@ function deleteLobby(token){ //sletter lobby
 
 //når man går ut av game, må man fjernes fra listen. Gjøre det umilig å joine to games samtidig
 
-//lobby[gameid]["users"][token] = users[token][username] - når lages
-//delete lobby[gameid]["users][token] - slettes
 //hvis man joiner ett annet game slettes det andre gamet?
 
-//hvis man logger inn, går tilbae til /login, kræsjer serveren. Kanskje logge ut evt bruker når get /login?
+//hvis man logger inn, går tilbae til /login, kræsjer serveren. Kanskje logge ut evt bruker når get /login? Eller automatisk logge på med samme id?
