@@ -93,10 +93,7 @@ function stringToList(enTextString, num = 0) {
     }
 
     else if (enTextString.includes(CodeArray[num])) {
-
         let splittaOpp = enTextString.split(CodeArray[num])
-        //console.log(splittaOpp)
-
         for (let underList of splittaOpp) {
 
             if (CodeArray.map(CodeArray => underList.includes(CodeArray)).includes(true)) {
@@ -108,16 +105,12 @@ function stringToList(enTextString, num = 0) {
             else if (underList == "") {
                 if (splittaOpp.length> 1)
                { 
-
-                //console.log("ff")
             }
                 splittaOpp.splice(splittaOpp.indexOf(underList), 1)
  
             }
             else{
-                //console.log(underList, parseInt(underList), typeof(underList), typeof(parseInt(underList)))
                 newUnderList = parseInt(underList)
-               //console.log(newUnderList)
                 splittaOpp.splice(splittaOpp.indexOf(underList), 1, newUnderList)
             }
         }
@@ -255,7 +248,6 @@ function Draw() {
     // draw all tiles
     for (let i = 0; i < dim[0]; i++) {
         for (let j = 0; j < dim[1]; j++) {
-            console.log("dim: ", dim[1])
             Rect(tile_color, ww/2 - dim[0]*tile_size/2 + i*tile_size, wh/2 - dim[1]*tile_size/2 + j*tile_size, tile_size, tile_size)
         }
     }
@@ -320,8 +312,6 @@ function sendClick(message, token) {
 function updateBoard(newBoard) {
     board = stringToList(newBoard)
     Draw()
-
-    //board = listToString(newBoard);
 }
 
 //template for å sende meldinger til server, og motta svar
@@ -335,19 +325,17 @@ source.addEventListener("message", message => {
   if (message.messageType === "text"){
     console.log(message.message.message) //message er er dataen inn, message er datataen fra serveren, og message er teksten ut
   } else if(message.messageType === "chat"){
-
     console.log(message.message.name +": "+ message.message.chatMessage); //rare navn men det er sånn det blir 
     displayChat(message.message)
   } else if (message.messageType === "id"){
     
   } else if (message.messageType === "boardUpdate") {
-    console.log(message.message.board)
-    console.log("+++")
     updateBoard(message.message.board)
-    console.log("boardupdate")
   } else if (message.messageType === "boardMake") {
     dim = stringToList(message.message.dim)
     tile_size = Math.min(ww*wp/dim[0], wh*wp/dim[1])
+    form.style.visibility = "hidden"
+    canvas.style.visibility = "visible"
   }
 })
 
@@ -392,7 +380,6 @@ function sendData(message){
 //displaye chat
 function displayChat(chatMessage){
   chat.push(chatMessage)
-  console.log(chat)
   if (chat.length > 50){
     chat.shift();
   }
@@ -467,8 +454,6 @@ function start_game(event) {
 
     var message = "/game_start/" + String(form.x.value) + "/" + String(form.y.value) + "/" + String(form.l.value)
     console.log(message)
-    form.style.visibility = "hidden"
-    canvas.style.visibility = "visible"
 
     var xhp = new XMLHttpRequest(); // initierer en ny request
     xhp.open("POST",message,true); //man setter url til meldingen
