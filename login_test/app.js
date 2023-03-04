@@ -37,6 +37,18 @@ app.post("/login/:username/:password", (req,res) => {
     checkPassword(username,password,res);
   })
 
+/* prøvde å fikse ett veldig spesifikt problem
+app.post("/tokenAuth/:token", (req,res) => {
+  Object.keys(users).forEach(user => {
+    if (user === req.params["token"]){ //hvis brukeren eksisterer
+      res.send("auth");
+      return
+    }
+  });
+  res.send("no_auth"); //hvis det ikke finnes noen bruker med token
+})
+*/
+
 //signup
 app.get('/signup', function(req,res){
     res.sendFile(path.join(__dirname, 'signup.html'));
@@ -52,7 +64,6 @@ app.post('/signup/:username/:password', (req,res) =>{
 app.post('/logout/:token', (req,res) => {
   logOut(req.params["token"]);
   res.send("logout"); 
-  console.log(users)
 })
 
 app.get('/game/:lobbyId', (req,res) => {
@@ -87,7 +98,7 @@ app.post('/creategame/:token',(req,res) => {
 })
 
 //vise lobbyer til brukeren
-app.post('/getgames', (req,res) => {
+app.post('/getgames/:token', (req,res) => {
   var tempGames = "{"
   Object.keys(lobby).forEach(game => {
     tempGames = tempGames +'"'+game+'":{"users":"test","owner":"'+lobby[game]["owner"]+'"}' +","
@@ -95,6 +106,7 @@ app.post('/getgames', (req,res) => {
   tempGames = tempGames.substring(0,tempGames.length - 1); //fjerner komma fra siste element
   tempGames = tempGames + "}" //legger til } på slutten
   res.send(tempGames) //sender antall games tilbake til brukeren
+  kickUser(req.params["token"]) //hvis man fetcher games, betyr det at man ikke er i game lenger. sjekk dette hvis bugs!
 })
 
 createLobby("f") //debug
@@ -176,16 +188,15 @@ async function checkPassword(username, userpassword,res){ //sjekker passord med 
         return;
     }
 
-    console.log(db)
     if (db[username].password === userpassword){ //sjekker om passorder stemmer med det fra brukeren
-      console.log("2")
+      let found = false
       Object.values(users).forEach(user => {
         if (username === user["username"]){
           res.send("user already logged in");
-          return;
+          found = true;
         }
       });
-      
+      if (found){return} //fordi man ikke kan returnere ut av en foreach
       //lager ny token
       let newToken = generateToken();
       users[newToken] = {"username": username};
@@ -331,14 +342,13 @@ function kickUser(token){
     if (game.users.hasOwnProperty(token)){
       delete game["users"][token]
     }
-    console.log("after:")
-    console.log(lobby)
   });
 }
 
 async function addUserToLobby(token, lobbyId){
   kickUser(token); //kicker slik at brukeren ikke er med i to games samtidig
   lobby[lobbyId]["users"][token] = users[token]["username"] //lagrer token og brukernavn i lobbyen
+  console.log(lobby)
   return "auth" //returnerer
 }
 
@@ -354,12 +364,8 @@ async function addUserToLobby(token, lobbyId){
 //dette dictionariet lages når spillet starter, og slettes når spillet er ferdig
 //funksjonen må også sjekke om et spill allerede finnes, og throw err
 
-//unngå at samme bruker logger seg inn to ganger (server kræsjer)
-
 //logout bug er fikset på en jævla retard måte men det fungerer. Fiks det i fremtiden.
 
-//når man går ut av game, må man fjernes fra listen. Gjøre det umilig å joine to games samtidig
-
-//hvis man joiner ett annet game slettes det andre gamet?
-
 //hvis man logger inn, går tilbae til /login, kræsjer serveren. Kanskje logge ut evt bruker når get /login? Eller automatisk logge på med samme id?
+
+//fjern sendingdata!!! Var kun brukt for å unngå at man sender duplicate data, men er en dust måte å gjøre det på

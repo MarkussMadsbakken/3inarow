@@ -59,7 +59,7 @@ function fetchGames(){
     var xhp = new XMLHttpRequest(); // initierer en ny request
     xhp.responseType = 'text';
   
-    xhp.open("POST","/getgames",true); //man setter url til meldingen
+    xhp.open("POST","/getgames/" + token ,true); //man setter url til meldingen
     xhp.send();
 
     xhp.timeout = 2000;
@@ -82,7 +82,6 @@ function join(gameid){
 function makegame(){
   let token = sessionStorage.getItem("token")
   if (sendingData){return;}
-  sendingData = true;
 
   var xhp = new XMLHttpRequest(); // initierer en ny request
   xhp.responseType = 'text';
@@ -93,7 +92,6 @@ function makegame(){
   xhp.timeout = 2000;
 
   xhp.onload = () => {
-    sendingData = false;
     if (xhp.response.includes("id:")){
       fetchGames();
     }
@@ -101,7 +99,6 @@ function makegame(){
   
   xhp.ontimeout = (e) =>{ //connection timed out, resend
     console.log("timeout, try again");
-    sendingData = false;
   }
 }
 

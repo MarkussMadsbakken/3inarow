@@ -2,9 +2,13 @@ var nameinput = document.getElementById("username");
 var passinput = document.getElementById("password");
 
 var errormsg = document.getElementById("errormsg");
-
-var sendingData = false;
-
+/*
+if (sessionStorage.hasOwnProperty("token")){ //hvis brukeren har en token, prøver vi å logge inn
+  if (tryTokenAuth(sessionStorage.getItem("token"))){ //funksjonen returnerer true hvis tokenen finnes på serveren
+    window.location.href = "/"; //sender bruker til index
+  }
+}
+*/
 passinput.addEventListener("keydown",function(event){
     if (event.key === "Enter"){
         let nameinputvalue = document.getElementById("username").value;
@@ -39,9 +43,6 @@ async function sha256(message) { //metode for å hashe en string
 }
 
 function publishLogin(username, password){
-    if (sendingData){return;}
-    sendingData = true;
-  
     var xhp = new XMLHttpRequest(); // initierer en ny request
     xhp.responseType = 'text';
   
@@ -51,21 +52,43 @@ function publishLogin(username, password){
     xhp.timeout = 2000;
   
     xhp.onload = () => {
-      sendingData = false;
 
       if (xhp.response.includes("login:")){
         sessionStorage.setItem("token",xhp.response.split(":")[1]); //splitter rundt ":" og setter sessionstorage til verdien etter 
         console.log(sessionStorage.getItem("token"));
-        window.location.href = "/"
+        window.location.replace("/")
       }
 
       errormsg.innerHTML = (xhp.response);
     }
     
-    xhp.ontimeout = (e) =>{ //connection timed out, resend
+    xhp.ontimeout = (e) =>{ //connection timed out
       console.log("timeout, try again");
     }
   }
+
+function tryTokenAuth(token){
+  
+    var xhp = new XMLHttpRequest(); // initierer en ny request
+    xhp.responseType = 'text';
+  
+    xhp.open("POST","/tokenAuth/"+token,true); //man setter url til meldingen
+    xhp.send();
+
+    xhp.timeout = 2000;
+  
+    xhp.onload = () => {
+      if (xhp.response.includes("auth")){
+        console.log("auth")
+        return true;
+      } //evt. else
+    }
+    
+    xhp.ontimeout = (e) =>{ //connection timed out
+      console.log("timeout, try again");
+    }
+  }
+
 
 //sende en token til bruker på login, burde holdes styr på i databasen. For at meldinger skal gå igjennom, må denne tokenen attaches til alle post requests, og valideres av serveren.
 //altså lese token, og sjekke om den stemmer med brukeren. 
