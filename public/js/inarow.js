@@ -255,6 +255,7 @@ function Draw() {
     // draw all tiles
     for (let i = 0; i < dim[0]; i++) {
         for (let j = 0; j < dim[1]; j++) {
+            console.log("dim: ", dim[1])
             Rect(tile_color, ww/2 - dim[0]*tile_size/2 + i*tile_size, wh/2 - dim[1]*tile_size/2 + j*tile_size, tile_size, tile_size)
         }
     }
@@ -291,7 +292,6 @@ function Rect(color, x, y, u, v) {
     ctx.fill()
     ctx.stroke()
 }
-Draw()
 
 
 sendingData = false
@@ -347,7 +347,7 @@ source.addEventListener("message", message => {
     console.log("boardupdate")
   } else if (message.messageType === "boardMake") {
     dim = stringToList(message.message.dim)
-    console.log(dim)
+    tile_size = Math.min(ww*wp/dim[0], wh*wp/dim[1])
   }
 })
 
