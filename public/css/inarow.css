@@ -6,9 +6,25 @@ body {
     overflow-y: hidden; /* Hide vertical scrollbar */
     overflow-x: hidden; /* Hide horizontal scrollbar */
     font-family: monospace;
+    background-color: #57619c;
 }
 body * {
     font-family: inherit;
+}
+form {
+    position: absolute;
+    left: 0px;
+    top: 50px;
+    width: 80vw;
+    padding: 30vh 0;
+    height: calc(40vh - 50px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+form > * {
+    margin-left: 20vw;
+    max-width: 150px;
 }
 .gamewrapper {
     position: absolute;
