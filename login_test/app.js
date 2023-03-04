@@ -103,7 +103,7 @@ app.post('/getgames/:token', (req,res) => {
   Object.keys(lobby).forEach(game => {
     tempGames = tempGames +'"'+game+'":{"users":"test","owner":"'+lobby[game]["owner"]+'"}' +","
   });
-  tempGames = tempGames.substring(0,tempGames.length - 1); //fjerner komma fra siste element
+  tempGames = tempGames.substring(0,tempGames.length - 1); //fjerner komma fra siste element6
   tempGames = tempGames + "}" //legger til } på slutten
   res.send(tempGames) //sender antall games tilbake til brukeren
   kickUser(req.params["token"]) //hvis man fetcher games, betyr det at man ikke er i game lenger. sjekk dette hvis bugs!
@@ -164,7 +164,7 @@ function countJSONLength(data){ //teller antall ULIKE keys i et JSON objekt
 }
 
 function logOut(token){
-  deleteLobby(token);
+  deleteLobby(token);//sletter lobby
   setTimeout(() =>{ //venter med å slette user, til deletelobby har slettet
     console.log("deleting: " + token)
     delete users[token];
@@ -369,3 +369,7 @@ async function addUserToLobby(token, lobbyId){
 //hvis man logger inn, går tilbae til /login, kræsjer serveren. Kanskje logge ut evt bruker når get /login? Eller automatisk logge på med samme id?
 
 //fjern sendingdata!!! Var kun brukt for å unngå at man sender duplicate data, men er en dust måte å gjøre det på
+
+//make game hanger av og til? klarer ikke å finne ut av hvorfor
+
+//hvis bruker logger men game er i progress, må man vente med å slette lobby til spillet er ferdig

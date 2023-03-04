@@ -39,3 +39,5 @@ function auth(){
       sendingData = false;
     }
   }
+
+//når man joiner må man også fetche spill hvis det er i progress
