@@ -13,11 +13,9 @@ chatinput.addEventListener("keydown",function(event){
 var sendingData = false;
 
 function sendChat(message, name){
-  console.log(name)
   if (sendingData){return;}
   sendingData = true;
 
-  console.log("sending data");
   var xhp = new XMLHttpRequest(); // initierer en ny request
 
   xhp.open("POST","/chat/"+ name + "/" + message,true); //man setter url til meldingen
