@@ -11,6 +11,21 @@ body {
 body * {
     font-family: inherit;
 }
+.playerOverview {
+    width: 20vw;
+}
+.playerOverview > div {
+    width: 20vw;
+    height: 2vh;
+    display: flex;
+    align-items: center;
+}
+.playerOverview > div:first-child {
+    background-color: #64646479;
+}
+.playerOverview > div:first-child > p {
+    padding-left: 10px;
+}
 form {
     position: absolute;
     left: 0px;

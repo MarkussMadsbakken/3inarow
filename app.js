@@ -141,7 +141,7 @@ function publishBoard(board, targets) {
   //tokens: array
   message = listToString(board)
   //message = listToString(board)
-  publishServerMessage('{"board":"'+message+'"}', "boardUpdate", targets)
+  publishServerMessage('{"board":"'+listToString(board)+'","turn":"'+game.turn+'"}', "boardUpdate", targets)
 }
 function makeBoard(dim, targets) {
   message = listToString(dim)

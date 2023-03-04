@@ -311,6 +311,7 @@ function sendClick(message, token) {
 
 function updateBoard(newBoard) {
     board = stringToList(newBoard)
+    update_Overview(test_players)
     Draw()
 }
 
@@ -331,6 +332,7 @@ source.addEventListener("message", message => {
     
   } else if (message.messageType === "boardUpdate") {
     updateBoard(message.message.board)
+    turn = parseInt(message.message.turn)
   } else if (message.messageType === "boardMake") {
     dim = stringToList(message.message.dim)
     tile_size = Math.min(ww*wp/dim[0], wh*wp/dim[1])
@@ -377,7 +379,7 @@ function sendData(message){
   }
 }
 
-//displaye chat
+//display chat
 function displayChat(chatMessage){
   chat.push(chatMessage)
   if (chat.length > 50){
@@ -478,3 +480,16 @@ function start_game(event) {
         }
     }
 }
+//--------------------- Oversikt --------------------
+test_players = ["P1", "P2", "P3", "P4"]
+ov = document.getElementsByClassName("playerOverview")[0]
+function update_Overview(list) {
+    txt = ""
+    console.log(list)
+    for (let i = 0; i < list.length; i++) {
+        console.log(i+turn)
+        txt += "<div><p>" + list[(i+turn)%list.length] + "</p></div>"
+    }
+    ov.innerHTML = txt
+}
+update_Overview(test_players)
