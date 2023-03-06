@@ -481,16 +481,16 @@ function start_game(event) {
     }
 }
 //--------------------- Oversikt --------------------
-test_players = ["P1", "P2"]
+test_players = ["P1", "P2", "P3"]
 ov = document.getElementsByClassName("playerOverview")[0]
 function update_Overview(list) {
     txt = ""
     console.log(turn)
     for (let i = 0; i < list.length; i++) {
         k = (i+turn)%list.length
-        txt = list[k]
+        _txt = list[k]
         // if txt == your name: txt = "(you)" 
-        txt += "<div><p>" + txt + "(" + (k+1)*100 + ")</p><div class='color_indicator' style='background-color:" + player_info[k].color + ";'></div></div>"
+        txt += "<div><p>" + list[k] + " (" + (k+1)*100 + ")</p><div class='color_indicator' style='background-color:" + player_info[k].color + ";'></div></div>"
     }
     ov.innerHTML = txt
 }
