@@ -25,6 +25,7 @@ __For å teste med mer enn 5 brukere må man åpne en annen nettleser (f.eks fir
 * lage egene spillrom, hvor man kan endre innstillinger
 * ~~innlogging og lagre passord i database~~
 * endre fra sessionstorage til localstorage (debug)
+* lagre board-klassen i lobby
 * spar plass ved uglify og beautify (burde lagre originalfilene et sted) https://beautifier.io/ og https://skalman.github.io/UglifyJS-online/
 * skrive om post til en enkel funskjon med path og message istedenfor å lage en million ulike?
 
