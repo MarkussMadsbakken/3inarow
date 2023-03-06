@@ -1,66 +1,25 @@
-<!DOCTYPE html> 
-
-<HTML>
+<html>
     <head>
-        <title> fire på rad</title>
-        <link rel="stylesheet" type="text/css" href="/css/inarow.css"/>
-        <link rel="stylesheet" type="text/css" href="public/css/inarow.css"/>
+        <link rel="stylesheet" type="text/css" href="/css/index.css"/>
     </head>
-
     <body>
         <div class = "nav">
             <a onclick = "goHome()"> Hjem </a> <!-- her kan vi sende en melding til serveren om at brukeren ønsker å gå tilbake-->
             <a onclick = "copyGameLink()"> firepårad/gameid </a> <!-- kopiere lenke når trykket-->
-            <div class = "sitetitle"> lobby: lobbyname </div> 
+            <div class = "sitetitle"> index </div> 
         </div>
-
-        <form class="lobbyForm">
-            <label>X:<input type="number" min="5" max="16" value="7" name="x"></label>
-            <label>Y:<input type="number" min="5" max="16" value="7" name="y"></label>
-            <label>Winn length: <input type="number" min="3" max="10" value="4" name="l"></label>
-            <input type="submit" value="Start game">
-        </form>
 
         <div class = "maincontent">
-            <div class = "gamewrapper" style="visibility: hidden;">
-                <canvas id = "rowgame"  width="400px" height="400px" onclick="c_click(event)">
-            </div>
-            <div class = "chat">
-            <!-- burde ikke være vanskelig å implimentere
-            chat etter vi har laget spillet-->
-
-                <div id = "msgContainer">
-                </div>
-                
-                <div id = "typeField">
-                    <input id = "typebox" placeholder="chat">
-                </div>
-            </div>
-            <div class = "playerOverview">
+            <div id = "showgames">
             </div>
         </div>
-        <!--
-        <script src = public/js/inarow.js></script>
-        <script src = public/js/nodetest.js></script>
-        -->
 
-        <div id = "popup">
-            <div id = "messageText">
-                Skriv inn navn
-            </div>
-            <div id = "skrivNavn">
-                <input id = "getName" placeholder="navn...">
-            </div>
+        <div id = "loggut"> 
+            <button id = loggutb type = "button"> log off </button>
         </div>
-        <script src = public/js/chat.js></script>
-        <script src = /js/chat.js></script>
-        <script src = /js/inarow.js></script>
-        <script src = /js/nodetest.js></script>
-        <script src = public/js/nodetest.js></script>
-
+        <div id = "makegame">
+            <button id = "creategame" type = "button" onclick="makegame()"> make game</button>
+        </div>
+        <script src = "/js/index.js"></script>
     </body>
-</HTML>
-
-<!-- popup hvis man ikke har valgt brukernavn, kanskje lage brukere?-->
-<!-- bruke ip for å identifisere hvilken bruker, beholde brukernavnet i localstorage-->
-<!-- noe som tracker winrate. Elo?-->
+</html>
