@@ -597,3 +597,8 @@ async function addUserToLobby(token, lobbyId){
 //make game hanger av og til? klarer ikke å finne ut av hvorfor
 
 //hvis bruker logger men game er i progress, må man vente med å slette lobby til spillet er ferdig
+
+
+
+
+//objektet board må lagres i lobbyen. Nå deler alle ett enkelt board
