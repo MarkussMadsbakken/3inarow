@@ -19,12 +19,18 @@ body * {
     height: 2vh;
     display: flex;
     align-items: center;
+    justify-content: space-between;
 }
 .playerOverview > div:first-child {
     background-color: #64646479;
 }
 .playerOverview > div:first-child > p {
     padding-left: 10px;
+}
+.color_indicator {
+    border-radius: 100%;
+    width: 2vh;
+    aspect-ratio: 1;
 }
 form {
     position: absolute;

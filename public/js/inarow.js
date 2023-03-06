@@ -331,8 +331,8 @@ source.addEventListener("message", message => {
   } else if (message.messageType === "id"){
     
   } else if (message.messageType === "boardUpdate") {
-    updateBoard(message.message.board)
     turn = parseInt(message.message.turn)
+    updateBoard(message.message.board)
   } else if (message.messageType === "boardMake") {
     dim = stringToList(message.message.dim)
     tile_size = Math.min(ww*wp/dim[0], wh*wp/dim[1])
@@ -481,15 +481,16 @@ function start_game(event) {
     }
 }
 //--------------------- Oversikt --------------------
-test_players = ["P1", "P2", "P3", "P4"]
+test_players = ["P1", "P2"]
 ov = document.getElementsByClassName("playerOverview")[0]
 function update_Overview(list) {
     txt = ""
-    console.log(list)
+    console.log(turn)
     for (let i = 0; i < list.length; i++) {
-        console.log(i+turn)
-        txt += "<div><p>" + list[(i+turn)%list.length] + "</p></div>"
+        k = (i+turn)%list.length
+        txt = list[k]
+        // if txt == your name: txt = "(you)" 
+        txt += "<div><p>" + txt + "(" + (k+1)*100 + ")</p><div class='color_indicator' style='background-color:" + player_info[k].color + ";'></div></div>"
     }
     ov.innerHTML = txt
 }
-update_Overview(test_players)

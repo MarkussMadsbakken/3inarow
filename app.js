@@ -34,6 +34,7 @@ class Game {
             if (this.turn >= this.players) {
                 this.turn = 0
             }
+            console.log(this.turn)
         }
     }
   }
@@ -110,7 +111,7 @@ app.post("/boardupdate/:token/:collum", (req, res) => {
 
   //sender respons 
   res.send("recieved");
-  publishBoard(game.board,users);
+  publishBoard(game.board,game.turn,users);
 })
 
 //start game
@@ -123,7 +124,7 @@ app.post("/game_start/:x/:y/:l", (req, res) => {
 
   res.send("recieved")
   makeBoard(dim, users)
-  publishBoard(game.board,users)
+  publishBoard(game.board, game.turn,users)
 })
 
 function publishServerMessage(message, messageType, targets){
@@ -135,13 +136,13 @@ function publishServerMessage(message, messageType, targets){
   // her må dataen sendes tilbake til app.get gamestring
 }
 
-function publishBoard(board, targets) {
+function publishBoard(board, turn, targets) {
   //sender board till alle i listen targets
   //board: 2Darray+
   //tokens: array
   message = listToString(board)
   //message = listToString(board)
-  publishServerMessage('{"board":"'+listToString(board)+'","turn":"'+game.turn+'"}', "boardUpdate", targets)
+  publishServerMessage('{"board":"'+listToString(board)+'","turn":"'+turn+'"}', "boardUpdate", targets)
 }
 function makeBoard(dim, targets) {
   message = listToString(dim)
