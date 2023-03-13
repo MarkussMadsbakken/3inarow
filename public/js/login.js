@@ -1,5 +1,6 @@
 var nameinput = document.getElementById("username");
 var passinput = document.getElementById("password");
+var loginbutton = document.getElementById("submitLogin")
 
 var errormsg = document.getElementById("errormsg");
 /*
@@ -16,6 +17,14 @@ passinput.addEventListener("keydown",function(event){
         document.getElementById("password").value = "";
         sendLogin(nameinputvalue, passinputvalue);
     }
+})
+
+loginbutton.addEventListener("click",function(){
+  console.log("ffaf")
+    let nameinputvalue = document.getElementById("username").value;
+    let passinputvalue = document.getElementById("password").value;
+    document.getElementById("password").value = "";
+    sendLogin(nameinputvalue, passinputvalue);
 })
 
 //Hashe clientside

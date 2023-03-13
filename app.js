@@ -1,7 +1,6 @@
 var http = require('http');
 var url = require('url');
 var fs = require('fs');
-var fe = ".html"
 var path = require("path");
 var util = require('util')
 
@@ -556,3 +555,5 @@ async function addUser(username, userpassword, res){ //legger til bruker
 //hvis man tabber ut, så teller det som disconnect. Øke deletiontime?
 
 //objektet board må lagres i lobbyen. Nå deler alle ett enkelt board
+
+//logger ut på tabout. crome major funny
