@@ -12,7 +12,201 @@ var app = express();
 var lobby = {}
 var users = {"f":{"username": "f"}}; //initierer brukere
 
-// ------------------ game ----------------
+
+//starte server
+app.listen(port)
+console.log("server started: http://localhost:"+port)
+
+//css
+app.use(express.static(__dirname + '/public'));
+
+
+
+// ----------- servermessage ----------- 
+function publishServerMessage(message, messageType, targets){
+  console.log("targets: " + targets)
+  targets.forEach(token => {
+    let res = users[token]["res"];
+    console.log(message)
+    res.write(`data:{"message":${message},"messageType":"${messageType}"}\n\n`);
+  });
+  // her må dataen sendes tilbake til app.get gamestring
+}
+
+
+
+// ----------- auth -----------
+
+//når brukeren starter serveren, lages det en eventlistener
+app.get("/serverMessages/:token", async function(req, res){
+  res.set({
+    'Cache-Control': 'no-cache', 
+    'Content-Type': 'text/event-stream',
+    'Connection': 'keep-alive'
+  })
+  res.flushHeaders(res,req);
+
+
+  //sjekker om brukeren har en token/er logget  inn
+  let token = req.params["token"];
+  if (!users.hasOwnProperty(token)){
+    console.log("user without valid token");
+    res.write(`data:{"message":"no_token","messageType":"err"}\n\n`); //sender error message
+    return; //avslutter uten å lagre res
+  }
+  
+  users[token]["res"] = res;
+  if (users[token].hasOwnProperty("timeout")){
+    console.log(token + " timed out, but reestablished connection")
+    clearTimeout(users[token]["timeout"]) //clearer timeout
+  }
+  
+  console.log("user listening to events: " + token); //dette slettes serverside
+  req.on("close",function(){
+    try { //funny try catch block i love him so much :)
+    //venter 30000 ms og sletter bruker
+    users[token]["timeout"] = setTimeout(() => {
+      kickUser(token);
+      deleteLobby(token);
+
+      setTimeout(() =>{ //venter med å slette user, til deletelobby har slettet
+        console.log("deleting: " + token)
+        delete users[token];
+      },"500")
+    }, "5000")} catch {
+    //hvis brukeren av en eller annen grunn ikke har token:
+    res.write(`data:{"message":"no_token","messageType":"err"}\n\n`); //sender error message
+    }
+  })
+})
+
+//logge ut
+function logOut(token){
+  deleteLobby(token);//sletter lobby
+  setTimeout(() =>{ //venter med å slette user, til deletelobby har slettet
+    console.log("deleting: " + token)
+    delete users[token];
+  },"500")
+}
+
+
+
+// ----------- lobby ----------- 
+
+app.get('/game/:lobbyId', (req,res) => {
+  let lobbyId = req.params["lobbyId"]
+  if (!lobby.hasOwnProperty(lobbyId)){
+    res.sendFile(path.join(__dirname, 'gameNotFound.html'))
+  } else {
+    res.sendFile(path.join(__dirname, 'game.html'))
+  }
+})
+
+//joine lobby
+app.post('/gameAuth/:lobbyId/:token',(req,res) =>{
+  let lobbyId = req.params["lobbyId"];
+  let token = req.params["token"];
+
+  if (!users.hasOwnProperty(token)){ //hvis ingen bruker har token
+    res.send("no_token")
+    return;
+  } else if (!lobby.hasOwnProperty(lobbyId)){ //lobbyen burde finnes, men just in case
+    res.send("no_game");
+    return;
+  }
+
+  //legg til bruker i brukere som er med i lobbyen
+  res.send(addUserToLobby(token, lobbyId))
+})
+
+//lage lobby
+app.post('/creategame/:token',(req,res) => {
+  res.send(createLobby(req.params["token"]))
+})
+
+function createLobby(token){ //lager lobby
+  if (users[token].hasOwnProperty("lobbyId")){ //hvis brukeren allerede har ett game
+    console.log("has lobby")
+    return "err: has_game"
+  }
+  users[token]["lobbyId"] = generateLobbyId();
+  console.log(users[token]["username"] + " has made a game with id " + users[token]["lobbyId"]);
+  lobby[users[token]["lobbyId"]] = {"owner":users[token]["username"]} //lagrer lobby i listen
+  lobby[users[token]["lobbyId"]]["users"] = {} //lagrer tom array til brukere
+  return "id:" + users[token]["lobbyId"];
+}
+
+//slette lobby
+function deleteLobby(token){ //sletter lobby
+  try {if (!users[token].hasOwnProperty("lobbyId")){ //hvis brukeren ikke har lobby
+    console.log("no lobby")
+    return "err: no_lobby"
+  }}catch {
+    //hvis brukeren ikke har token
+    return "err: no_token"
+  }
+  console.log(users[token]["username"] + " has deleted a game with id " + users[token]["lobbyId"]);
+  let deletedLobby = users[token]["lobbyId"];
+
+  //sletter lobby
+  delete lobby[users[token]["lobbyId"]]
+  delete users[token]["lobbyId"];
+  return "deleted: " + deletedLobby;
+}
+
+//kicke user
+function kickUser(token){
+  Object.values(lobby).forEach(game => {
+    if (game.users.hasOwnProperty(token)){
+      delete game["users"][token]
+    }
+  });
+}
+
+//joine lobby
+async function addUserToLobby(token, lobbyId){
+  kickUser(token); //kicker slik at brukeren ikke er med i to games samtidig
+  lobby[lobbyId]["users"][token] = users[token]["username"] //lagrer token og brukernavn i lobbyen
+  console.log(lobby)
+  return "auth" //returnerer
+}
+
+
+//chat
+app.post("/chat/:token/:message/:lobbyId", (req,res) => {
+  var token = req.params["token"]
+  var message = req.params["message"] //henter verdier
+
+  //sender respons 
+  res.send("recieved");
+
+  let players = (Object.keys(lobby[req.params["lobbyId"]]["users"])) //finner alle spillerne i gamet
+  //sjekke om spilleren som sender meldingen faktisk er i gamet
+
+  let name = lobby[req.params["lobbyId"]]["users"][token]
+
+  publishServerMessage('{"name":"'+ name +'","chatMessage":"' + message+'"}',"chat", players);
+})
+
+
+//lage lobbyId
+function generateLobbyId(){
+  let length = 4;
+  let result = "";
+  const char = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const charlenght = char.length;
+  let i = 0;
+
+  while (i < length){
+    result += char.charAt(Math.floor(Math.random()*charlenght));
+    i += 1;
+  }
+  return result;
+}
+
+// ----------- game -----------
+
+//game klasse
 class Game {
   constructor(dim, winn_l, tokens) {
     // dim: array med 2 verdier, tillsvarer x og y lengden av brettet
@@ -42,47 +236,7 @@ class Game {
   }
 }
 let game = new Game([5,5], 4, ["test", "test2"])
-// ------------------ /game ----------------
 
-//starte server
-app.listen(port)
-console.log("server started: http://localhost:"+port)
-
-//css
-app.use(express.static(__dirname + '/public'));
-
-
-
-// ----------- servermessage ----------- 
-function publishServerMessage(message, messageType, targets){
-  console.log("targets: " + targets)
-  targets.forEach(token => {
-    let res = users[token]["res"];
-    console.log(message)
-    res.write(`data:{"message":${message},"messageType":"${messageType}"}\n\n`);
-  });
-  // her må dataen sendes tilbake til app.get gamestring
-}
-
-
-
-// ----------- lobby ----------- 
-
-//chat
-app.post("/chat/:token/:message/:lobbyId", (req,res) => {
-  var token = req.params["token"]
-  var message = req.params["message"] //henter verdier
-
-  //sender respons 
-  res.send("recieved");
-
-  let players = (Object.keys(lobby[req.params["lobbyId"]]["users"])) //finner alle spillerne i gamet
-  //sjekke om spilleren som sender meldingen faktisk er i gamet
-
-  let name = lobby[req.params["lobbyId"]]["users"][token]
-
-  publishServerMessage('{"name":"'+ name +'","chatMessage":"' + message+'"}',"chat", players);
-})
 
 //boardupdate from user
 app.post("/boardupdate/:token/:collum/:lobbyId", (req, res) => {
@@ -118,6 +272,7 @@ app.post("/game_start/:x/:y/:l/:lobbyId", (req, res) => {
   publishBoard(game.board, game.turn, players)
 })
 
+//publish board
 function publishBoard(board, turn, targets) {
   //sender board till alle i listen targets
   //board: 2Darray+
@@ -126,11 +281,14 @@ function publishBoard(board, turn, targets) {
   //message = listToString(board)
   publishServerMessage('{"board":"'+listToString(board)+'","turn":"'+turn+'"}', "boardUpdate", targets)
 }
+
+//lage brett
 function makeBoard(dim, targets) {
   message = listToString(dim)
   publishServerMessage('{"dim":"'+message+'"}', "boardMake", targets)
 }
 
+//konvertere liste til string
 function listToString(liste, num = 0) {
   let CodeArray = ["!","@", "#", "$", "%", "&", "/", "(", ")", "="]
   let listToStringEle = ""
@@ -162,18 +320,34 @@ function listToString(liste, num = 0) {
 
 //index
 
-/* ---------- login og auth ---------- */
-
+// ---------- startside ---------- 
 
 //innlogget
 app.get('/', function(req, res) {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
+//vise lobbyer til brukeren
+app.post('/getgames/:token', (req,res) => {
+  var tempGames = "{"
+  Object.keys(lobby).forEach(game => {
+    tempGames = tempGames +'"'+game+'":{"users":"test","owner":"'+lobby[game]["owner"]+'"}' +","
+  });
+  tempGames = tempGames.substring(0,tempGames.length - 1); //fjerner komma fra siste element6
+  tempGames = tempGames + "}" //legger til } på slutten
+  res.send(tempGames) //sender antall games tilbake til brukeren
+  kickUser(req.params["token"]) //hvis man fetcher games, betyr det at man ikke er i game lenger. sjekk dette hvis bugs!
+})
+
+
+
+// ----------- login -----------
+
 //loginpage
 app.get('/login', function(req, res) {
     res.sendFile(path.join(__dirname, 'login.html'));
   });
+
 
 //login
 app.post("/login/:username/:password", (req,res) => {
@@ -182,6 +356,59 @@ app.post("/login/:username/:password", (req,res) => {
     //sender respons 
     checkPassword(username,password,res);
   })
+
+//sjekker passord med verdi lagret i databasen
+async function checkPassword(username, userpassword,res){
+
+  //unngå at programmet kræsjer hvis verdiene ikke kan brukes
+  if (typeof username == 'undefined'|| typeof userpassword == 'undefined'){
+      res.send("input is undefined");
+      return;
+  }
+
+  let db = await fetchData() //venter til data er hentet fra databasen
+
+  //sjekker at brukernavnet finnes i databasen:
+  if (!db.hasOwnProperty(username)){
+      res.send("username does not exist");
+      return;
+  }
+
+  if (db[username].password === userpassword){ //sjekker om passorder stemmer med det fra brukeren
+    let found = false
+    Object.values(users).forEach(user => {
+      if (username === user["username"]){
+        res.send("user already logged in");
+        found = true;
+      }
+    });
+    if (found){return} //fordi man ikke kan returnere ut av en foreach
+    //lager ny token
+      let newToken = generateToken();
+      users[newToken] = {"username": username};
+      res.send("login:" + newToken)
+        
+    } else {
+        res.send("wrong username or password");
+        return;
+    }
+}
+
+//lager en ny token
+function generateToken(){
+  let length = 12
+  let result = "";
+  const char = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  const charlenght = char.length;
+  let i = 0;
+
+  while (i < length){
+    result += char.charAt(Math.floor(Math.random()*charlenght));
+    i += 1;
+  }
+  return result;
+}
+
 
 /* prøvde å fikse ett veldig spesifikt problem
 app.post("/tokenAuth/:token", (req,res) => {
@@ -195,7 +422,10 @@ app.post("/tokenAuth/:token", (req,res) => {
 })
 */
 
-//signup
+
+
+// ----------- signup -----------
+
 app.get('/signup', function(req,res){
     res.sendFile(path.join(__dirname, 'signup.html'));
 })
@@ -212,54 +442,16 @@ app.post('/logout/:token', (req,res) => {
   res.send("logout"); 
 })
 
-app.get('/game/:lobbyId', (req,res) => {
-  let lobbyId = req.params["lobbyId"]
-  if (!lobby.hasOwnProperty(lobbyId)){
-    res.sendFile(path.join(__dirname, 'gameNotFound.html'))
-  } else {
-    res.sendFile(path.join(__dirname, 'game.html'))
-  }
-})
-
-//joine lobby
-app.post('/gameAuth/:lobbyId/:token',(req,res) =>{
-  let lobbyId = req.params["lobbyId"];
-  let token = req.params["token"];
-
-  if (!users.hasOwnProperty(token)){ //hvis ingen bruker har token
-    res.send("no_token")
-    return;
-  } else if (!lobby.hasOwnProperty(lobbyId)){ //lobbyen burde finnes, men just in case
-    res.send("no_game");
-    return;
-  }
-
-  //legg til bruker i brukere som er med i lobbyen
-  res.send(addUserToLobby(token, lobbyId))
-})
-
-//lage lobby
-app.post('/creategame/:token',(req,res) => {
-  res.send(createLobby(req.params["token"]))
-})
-
-//vise lobbyer til brukeren
-app.post('/getgames/:token', (req,res) => {
-  var tempGames = "{"
-  Object.keys(lobby).forEach(game => {
-    tempGames = tempGames +'"'+game+'":{"users":"test","owner":"'+lobby[game]["owner"]+'"}' +","
-  });
-  tempGames = tempGames.substring(0,tempGames.length - 1); //fjerner komma fra siste element6
-  tempGames = tempGames + "}" //legger til } på slutten
-  res.send(tempGames) //sender antall games tilbake til brukeren
-  kickUser(req.params["token"]) //hvis man fetcher games, betyr det at man ikke er i game lenger. sjekk dette hvis bugs!
-})
 
 createLobby("f") //debug
+
+
+// ----------- database -----------
 
 var databasePath = __dirname+"/very_secure_database.txt"; //hvor databasen ligger
 
 const readFile = util.promisify(fs.readFile) //gjør at man kan gjøre noe med dataen etter den er hentet
+
 
 function readDatabase(){
   // lese database
@@ -309,80 +501,7 @@ function countJSONLength(data){ //teller antall ULIKE keys i et JSON objekt
   return count;
 }
 
-function logOut(token){
-  deleteLobby(token);//sletter lobby
-  setTimeout(() =>{ //venter med å slette user, til deletelobby har slettet
-    console.log("deleting: " + token)
-    delete users[token];
-  },"500")
 
-}
-
-async function checkPassword(username, userpassword,res){ //sjekker passord med verdi lagret i databasen
-
-    //unngå at programmet kræsjer hvis verdiene ikke kan brukes
-    if (typeof username == 'undefined'|| typeof userpassword == 'undefined'){
-        res.send("input is undefined");
-        return;
-    }
-
-    let db = await fetchData() //venter til data er hentet fra databasen
-
-    //sjekker at brukernavnet finnes i databasen:
-    if (!db.hasOwnProperty(username)){
-        res.send("username does not exist");
-        return;
-    }
-
-    if (db[username].password === userpassword){ //sjekker om passorder stemmer med det fra brukeren
-      let found = false
-      Object.values(users).forEach(user => {
-        if (username === user["username"]){
-          res.send("user already logged in");
-          found = true;
-        }
-      });
-      if (found){return} //fordi man ikke kan returnere ut av en foreach
-      //lager ny token
-      let newToken = generateToken();
-      users[newToken] = {"username": username};
-      res.send("login:" + newToken)
-        
-    } else {
-        res.send("wrong username or password");
-        return;
-    }
-}
-
-//lager en ny token
-function generateToken(){
-  let length = 12
-  let result = "";
-  const char = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  const charlenght = char.length;
-  let i = 0;
-
-  while (i < length){
-    result += char.charAt(Math.floor(Math.random()*charlenght));
-    i += 1;
-  }
-  return result;
-}
-
-//lage lobbyId
-function generateLobbyId(){
-  let length = 4;
-  let result = "";
-  const char = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  const charlenght = char.length;
-  let i = 0;
-
-  while (i < length){
-    result += char.charAt(Math.floor(Math.random()*charlenght));
-    i += 1;
-  }
-  return result;
-}
 
 async function addUser(username, userpassword, res){ //legger til bruker
   //unngå at programmet kræsjer hvis verdiene ikke kan brukes
@@ -407,95 +526,6 @@ async function addUser(username, userpassword, res){ //legger til bruker
   res.send(appendDatabase(
     '"' + username + '": {"password": "' + userpassword + '"}'
   ));
-}
-
-
-//når brukeren starter serveren, lages det en eventlistener
-app.get("/serverMessages/:token", async function(req, res){
-  res.set({
-    'Cache-Control': 'no-cache', 
-    'Content-Type': 'text/event-stream',
-    'Connection': 'keep-alive'
-  })
-  res.flushHeaders(res,req);
-
-
-  //sjekker om brukeren har en token/er logget  inn
-  let token = req.params["token"];
-  if (!users.hasOwnProperty(token)){
-    console.log("user without valid token");
-    res.write(`data:{"message":"no_token","messageType":"err"}\n\n`); //sender error message
-    return; //avslutter uten å lagre res
-  }
-  
-  users[token]["res"] = res;
-  if (users[token].hasOwnProperty("timeout")){
-    console.log(token + " timed out, but reestablished connection")
-    clearTimeout(users[token]["timeout"]) //clearer timeout
-  }
-  
-  console.log("user listening to events: " + token); //dette slettes serverside
-  req.on("close",function(){
-    try { //funny try catch block i love him so much :)
-    //venter 30000 ms og sletter bruker
-    users[token]["timeout"] = setTimeout(() => {
-      kickUser(token);
-      deleteLobby(token);
-
-      setTimeout(() =>{ //venter med å slette user, til deletelobby har slettet
-        console.log("deleting: " + token)
-        delete users[token];
-      },"500")
-    }, "5000")} catch {
-    //hvis brukeren av en eller annen grunn ikke har token:
-    res.write(`data:{"message":"no_token","messageType":"err"}\n\n`); //sender error message
-    }
-  })
-})
-
-//lage og slette lobby
-function createLobby(token){ //lager lobby
-  if (users[token].hasOwnProperty("lobbyId")){ //hvis brukeren allerede har ett game
-    console.log("has lobby")
-    return "err: has_game"
-  }
-  users[token]["lobbyId"] = generateLobbyId();
-  console.log(users[token]["username"] + " has made a game with id " + users[token]["lobbyId"]);
-  lobby[users[token]["lobbyId"]] = {"owner":users[token]["username"]} //lagrer lobby i listen
-  lobby[users[token]["lobbyId"]]["users"] = {} //lagrer tom array til brukere
-  return "id:" + users[token]["lobbyId"];
-}
-
-function deleteLobby(token){ //sletter lobby
-  try {if (!users[token].hasOwnProperty("lobbyId")){ //hvis brukeren ikke har lobby
-    console.log("no lobby")
-    return "err: no_lobby"
-  }}catch {
-    //hvis brukeren ikke har token
-    return "err: no_token"
-  }
-  console.log(users[token]["username"] + " has deleted a game with id " + users[token]["lobbyId"]);
-  let deletedLobby = users[token]["lobbyId"];
-
-  //sletter lobby
-  delete lobby[users[token]["lobbyId"]]
-  delete users[token]["lobbyId"];
-  return "deleted: " + deletedLobby;
-}
-
-function kickUser(token){
-  Object.values(lobby).forEach(game => {
-    if (game.users.hasOwnProperty(token)){
-      delete game["users"][token]
-    }
-  });
-}
-
-async function addUserToLobby(token, lobbyId){
-  kickUser(token); //kicker slik at brukeren ikke er med i to games samtidig
-  lobby[lobbyId]["users"][token] = users[token]["username"] //lagrer token og brukernavn i lobbyen
-  console.log(lobby)
-  return "auth" //returnerer
 }
 
 //vi lagrer token som slags id, vi trenger ikke resid.
