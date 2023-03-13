@@ -365,7 +365,6 @@ async function addUserToLobby(token, lobbyId){
 //funksjonen må også sjekke om et spill allerede finnes, og throw err
 
 //logout bug er fikset på en jævla retard måte men det fungerer. Fiks det i fremtiden.
-
 //hvis man logger inn, går tilbae til /login, kræsjer serveren. Kanskje logge ut evt bruker når get /login? Eller automatisk logge på med samme id?
 
 //fjern sendingdata!!! Var kun brukt for å unngå at man sender duplicate data, men er en dust måte å gjøre det på
@@ -373,3 +372,5 @@ async function addUserToLobby(token, lobbyId){
 //make game hanger av og til? klarer ikke å finne ut av hvorfor
 
 //hvis bruker logger men game er i progress, må man vente med å slette lobby til spillet er ferdig
+
+//i noen tilfeller virker det som om at token ikke slettes

@@ -51,14 +51,22 @@ console.log("server started: http://localhost:"+port)
 //css
 app.use(express.static(__dirname + '/public'));
 
-app.post('/:message', (req,res) => { //lager dictionary. f.eks /:userID/:move
-  var message = req.params["message"] //henter verdien til message
-  console.log(message)
 
-  publishServerMessage('{"message":"'+ message+'"}', "text", users);
-  //sender respons 
-  res.send("recieved");
-})
+
+// ----------- servermessage ----------- 
+function publishServerMessage(message, messageType, targets){
+  console.log("targets: " + targets)
+  targets.forEach(token => {
+    let res = users[token]["res"];
+    console.log(message)
+    res.write(`data:{"message":${message},"messageType":"${messageType}"}\n\n`);
+  });
+  // her må dataen sendes tilbake til app.get gamestring
+}
+
+
+
+// ----------- lobby ----------- 
 
 //chat
 app.post("/chat/:token/:message/:lobbyId", (req,res) => {
@@ -76,7 +84,7 @@ app.post("/chat/:token/:message/:lobbyId", (req,res) => {
   publishServerMessage('{"name":"'+ name +'","chatMessage":"' + message+'"}',"chat", players);
 })
 
-//update from user
+//boardupdate from user
 app.post("/boardupdate/:token/:collum/:lobbyId", (req, res) => {
   var token = req.params["user"]
   var collum = req.params["collum"]
@@ -109,16 +117,6 @@ app.post("/game_start/:x/:y/:l/:lobbyId", (req, res) => {
   makeBoard(dim, players)
   publishBoard(game.board, game.turn, players)
 })
-
-function publishServerMessage(message, messageType, targets){
-  console.log("targets: " + targets)
-  targets.forEach(token => {
-    let res = users[token]["res"];
-    console.log(message)
-    res.write(`data:{"message":${message},"messageType":"${messageType}"}\n\n`);
-  });
-  // her må dataen sendes tilbake til app.get gamestring
-}
 
 function publishBoard(board, turn, targets) {
   //sender board till alle i listen targets
@@ -162,83 +160,7 @@ function listToString(liste, num = 0) {
   return listToStringEle
 }
 
-
-function stringToList(enTextString, num = 0) {
-  let CodeArray = ["!","@", "#", "$", "%", "&","/", "(", ")","="]  
-
-  if (enTextString.length == 1) {
-      return []
-  }
-
-  else if (enTextString.includes(CodeArray[num])) {
-
-      let splittaOpp = enTextString.split(CodeArray[num])
-      //console.log(splittaOpp)
-
-      for (let underList of splittaOpp) {
-
-          if (CodeArray.map(CodeArray => underList.includes(CodeArray)).includes(true)) {
-
-              newUnderList = stringToList(underList, num+1)
-              
-              splittaOpp.splice(splittaOpp.indexOf(underList), 1, newUnderList)
-          }
-          else if (underList == "") {
-              if (splittaOpp.length> 1)
-             { 
-
-              //console.log("ff")
-          }
-              splittaOpp.splice(splittaOpp.indexOf(underList), 1)
-
-          }
-          else{
-              //console.log(underList, parseInt(underList), typeof(underList), typeof(parseInt(underList)))
-              newUnderList = parseInt(underList)
-             //console.log(newUnderList)
-              splittaOpp.splice(splittaOpp.indexOf(underList), 1, newUnderList)
-          }
-      }
-      return splittaOpp
-  }
-  else if (CodeArray.map(CodeArray => enTextString.includes(CodeArray)).includes(true)) {
-      splittaOppe = stringToList(enTextString, num+1)
-      return [splittaOppe]
-      
-  }
-
-  return "teksten kan ikke gjøre om til liste" + enTextString + CodeArray.map(CodeArray => enTextString.includes(CodeArray)).includes(true)
-}
-
-
 //index
-
-
-
-
-
-// motta spilloppdateringer fra brukeren, og sjekke om riktig spiller har gitt input
-// inkluderer navn/ip, hvilket move
-
-// oppdatere spill-string
-
-// måter å implimentere sse
-// https://medium.com/system-design-blog/long-polling-vs-websockets-vs-server-sent-events-c43ba96df7c1
-// https://dev.to/dhiwise/how-to-implement-server-sent-events-in-nodejs-11d9
-// https://stackoverflow.com/questions/36249684/simple-way-to-implement-server-sent-events-in-node-js
-
-
-// bruke sse for å sende dataen til alle brukerene samtidig
-// kalles fra oppdaterings-funksjonen<
-
-/* metode for å sende melding til serveren
-function sendMessage(message) {
-    fetch(url, {
-      method: 'POST',
-      body: message
-    });
-  }
-*/
 
 /* ---------- login og auth ---------- */
 
@@ -599,6 +521,8 @@ async function addUserToLobby(token, lobbyId){
 //hvis bruker logger men game er i progress, må man vente med å slette lobby til spillet er ferdig
 
 
-
+//i noen tilfeller virker det som om at token ikke slettes.
+//kanskje fikses ved å sette token til spiller som er logget inn, og generere ny?
+//hvis man tabber ut, så teller det som disconnect. Øke deletiontime?
 
 //objektet board må lagres i lobbyen. Nå deler alle ett enkelt board
