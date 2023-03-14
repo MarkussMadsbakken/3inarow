@@ -261,6 +261,8 @@ app.post("/game_start/:x/:y/:l/:lobbyId", (req, res) => {
   var dim = [parseInt(req.params["x"]), parseInt(req.params["y"])]
   var winn_l = req.params["l"]
 
+  //sjekke om lobby finnes
+  //sette lobby["lobby"] til new lobby med antall brukere
   console.log("New game:", dim, winn_l)
   game = new Game(dim, winn_l, ["test", "test2"])
 
