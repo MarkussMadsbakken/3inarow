@@ -54,19 +54,19 @@ app.get("/serverMessages/:token", async function(req, res){
     return; //avslutter uten å lagre res
   }
   
-  users[token]["res"] = res;
-  if (users[token].hasOwnProperty("timeout")){
+  users[token]["res"] = res; //setter token["res"] til res for å motta servermessages
+  if (users[token].hasOwnProperty("timeout")){ //hvis brukeren har logget av
     console.log(token + " timed out, but reestablished connection")
     clearTimeout(users[token]["timeout"]) //clearer timeout
   }
   
-  console.log("user listening to events: " + token); //dette slettes serverside
-  req.on("close",function(){
+  console.log("user listening to events: " + token); //debug
+  req.on("close",function(){ //når brukeren lukker siden
     try { //funny try catch block i love him so much :)
     //venter 30000 ms og sletter bruker
     users[token]["timeout"] = setTimeout(() => {
-      kickUser(token);
-      deleteLobby(token);
+      kickUser(token); //kick bruker fra evt. lobby
+      deleteLobby(token); //slett evt. lobby
 
       setTimeout(() =>{ //venter med å slette user, til deletelobby har slettet
         console.log("deleting: " + token)
@@ -95,9 +95,9 @@ function logOut(token){
 app.get('/game/:lobbyId', (req,res) => {
   let lobbyId = req.params["lobbyId"]
   if (!lobby.hasOwnProperty(lobbyId)){
-    res.sendFile(path.join(__dirname, 'gameNotFound.html'))
+    res.sendFile(path.join(__dirname, 'gameNotFound.html')) //hvis lobby med id ikke finnes
   } else {
-    res.sendFile(path.join(__dirname, 'game.html'))
+    res.sendFile(path.join(__dirname, 'game.html')) //hvis lobby med id finnes
   }
 })
 
@@ -128,11 +128,11 @@ function createLobby(token){ //lager lobby
     console.log("has lobby")
     return "err: has_game"
   }
-  users[token]["lobbyId"] = generateLobbyId();
-  console.log(users[token]["username"] + " has made a game with id " + users[token]["lobbyId"]);
+  users[token]["lobbyId"] = generateLobbyId(); //lager ny lobbyId
+  console.log(users[token]["username"] + " has made a game with id " + users[token]["lobbyId"]); //debug
   lobby[users[token]["lobbyId"]] = {"owner":users[token]["username"]} //lagrer lobby i listen
   lobby[users[token]["lobbyId"]]["users"] = {} //lagrer tom array til brukere
-  return "id:" + users[token]["lobbyId"];
+  return "id:" + users[token]["lobbyId"]; //returnerer lobbyid med token
 }
 
 //slette lobby
@@ -144,7 +144,7 @@ function deleteLobby(token){ //sletter lobby
     //hvis brukeren ikke har token
     return "err: no_token"
   }
-  console.log(users[token]["username"] + " has deleted a game with id " + users[token]["lobbyId"]);
+  console.log(users[token]["username"] + " has deleted a game with id " + users[token]["lobbyId"]); //debug
   let deletedLobby = users[token]["lobbyId"];
 
   //sletter lobby
@@ -196,6 +196,7 @@ function generateLobbyId(){
   const charlenght = char.length;
   let i = 0;
 
+  //stjålet fra stackoverflow
   while (i < length){
     result += char.charAt(Math.floor(Math.random()*charlenght));
     i += 1;
@@ -329,7 +330,7 @@ app.get('/', function(req, res) {
 //vise lobbyer til brukeren
 app.post('/getgames/:token', (req,res) => {
   var tempGames = "{"
-  Object.keys(lobby).forEach(game => {
+  Object.keys(lobby).forEach(game => { //for hvert game legg til lobbyen i json element
     tempGames = tempGames +'"'+game+'":{"users":"test","owner":"'+lobby[game]["owner"]+'"}' +","
   });
   tempGames = tempGames.substring(0,tempGames.length - 1); //fjerner komma fra siste element6
@@ -375,7 +376,7 @@ async function checkPassword(username, userpassword,res){
 
   if (db[username].password === userpassword){ //sjekker om passorder stemmer med det fra brukeren
     let found = false
-    Object.values(users).forEach(user => {
+    Object.values(users).forEach(user => { //hvis brukeren er innlogget. endre til at man sletter token, istedenfor å gjøre det på denne retarda måten 
       if (username === user["username"]){
         res.send("user already logged in");
         found = true;
@@ -401,6 +402,7 @@ function generateToken(){
   const charlenght = char.length;
   let i = 0;
 
+  //stjålet fra stackoverflow
   while (i < length){
     result += char.charAt(Math.floor(Math.random()*charlenght));
     i += 1;
@@ -442,10 +444,9 @@ app.post('/logout/:token', (req,res) => {
 })
 
 
-createLobby("f") //debug
-
 
 // ----------- database -----------
+//alt dette skal forhåpentiligvis endres i nær fremtid
 
 var databasePath = __dirname+"/very_secure_database.txt"; //hvor databasen ligger
 
@@ -456,6 +457,7 @@ function readDatabase(){
   // lese database
   return readFile(databasePath, 'utf8')
 }
+
 
 function appendDatabase(appendData){
   readDatabase().then(data =>{
@@ -505,7 +507,7 @@ function countJSONLength(data){ //teller antall ULIKE keys i et JSON objekt
 async function addUser(username, userpassword, res){ //legger til bruker
   //unngå at programmet kræsjer hvis verdiene ikke kan brukes
   if (typeof username == 'undefined'|| typeof userpassword == 'undefined'){
-    res.send("input is undefined");
+    res.send("input is undefined"); 
     return;
   }
   let db = await fetchData() //venter til data er hentet fra databasen
@@ -526,6 +528,9 @@ async function addUser(username, userpassword, res){ //legger til bruker
     '"' + username + '": {"password": "' + userpassword + '"}'
   ));
 }
+
+
+createLobby("f") //debug
 
 //vi lagrer token som slags id, vi trenger ikke resid.
 //når man skal listene til event listener, trenger man id, og man blir "kicka" hvis man ikke har token.
