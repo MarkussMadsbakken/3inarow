@@ -3,7 +3,7 @@
 __For å teste med mer enn 5 brukere må man åpne en annen nettleser (f.eks firefox eller edge)__
 
 ## installasjon av Node.js
-1. last ned Node.js fra https://nodejs.org/en/
+1. last ned og åpne Node.js fra https://nodejs.org/en/
 2. kjør node -version i cmd (--version i terminal)
 3. last ned Node.js exec vscode extension
 4. åpne cmd og kjør npm install express --save
