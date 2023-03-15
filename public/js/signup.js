@@ -1,5 +1,6 @@
 var nameinput = document.getElementById("username");
 var passinput = document.getElementById("password");
+var submitbutton = document.getElementById("submitbutton")
 
 var errormsg = document.getElementById("errormsg");
 
@@ -12,6 +13,13 @@ passinput.addEventListener("keydown",function(event){
         document.getElementById("password").value = "";
         sendNewUser(nameinputvalue, passinputvalue);
     }
+})
+
+submitbutton.addEventListener("click",function(){
+    let nameinputvalue = document.getElementById("username").value;
+    let passinputvalue = document.getElementById("password").value;
+    document.getElementById("password").value = "";
+    sendNewUser(nameinputvalue, passinputvalue);
 })
 
 //sende ny bruker til serveren
