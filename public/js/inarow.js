@@ -472,14 +472,14 @@ function requestgame(){
     xhp.timeout = 2000;
 
     xhp.onload = () => {
-        if (xhp.parse.includes("game_not_prog")){  //hvis spillet ikke er i gang
+        if (xhp.response.includes("game_not_prog")){  //hvis spillet ikke er i gang
+            console.log("game not in progress")
             return;
         }
-        
+
         message = JSON.parse(xhp.response)
-        console.log(message.dim)
         dim = stringToList(message.dim)
-        console.log(dim)
+        console.log(dim + "dim")
         tile_size = Math.min(ww*wp/dim[0], wh*wp/dim[1])
         form.style.visibility = "hidden"
         canvas.style.visibility = "visible"
