@@ -166,10 +166,26 @@ function kickUser(token){
 async function addUserToLobby(token, lobbyId){
   kickUser(token); //kicker slik at brukeren ikke er med i to games samtidig
   lobby[lobbyId]["users"][token] = users[token]["username"] //lagrer token og brukernavn i lobbyen
-  console.log(lobby)
+
   return "auth" //returnerer
 }
 
+//request gamestart
+app.post("/requestgame/:token/:lobbyId", (req,res) => {
+  let token = req.params["token"]
+  let lobbyId = req.params["lobbyId"]
+  let targets = [token]
+
+  if (lobby[lobbyId].hasOwnProperty("game")){ //hvis game er startet, send game til bruker
+    console.log(lobby[lobbyId]["game"].dim)
+    res.send('{"dim":"'+listToString(lobby[lobbyId]["game"].dim)+'"}')
+    setTimeout(() =>{ //venter med å slette user, til deletelobby har slettet
+      publishBoard(lobby[lobbyId]["game"].turn, targets,lobbyId);
+    },"500")
+  } else {
+    res.send("game_not_prog")
+  }
+})
 
 //chat
 app.post("/chat/:token/:message/:lobbyId", (req,res) => {
@@ -276,7 +292,6 @@ app.post("/game_start/:x/:y/:l/:lobbyId", (req, res) => {
 
   lobby[lobbyId]["game"] = new Game(dim, winn_l, ["test", "test2"])
 
-  console.log(lobby[lobbyId]["game"])
   //sette lobby["game"] til new game med antall brukere
 
   console.log("New game:", dim, winn_l)
@@ -294,7 +309,6 @@ function publishBoard(turn, targets,lobbyId) {
   //sender board till alle i listen targets
   //board: 2Darray+
   //tokens: array
-  console.log(lobby[lobbyId]["game"])
   message = listToString(lobby[lobbyId]["game"])
   //message = listToString(board)
   publishServerMessage('{"board":"'+listToString(lobby[lobbyId]["game"].board)+'","turn":"'+turn+'"}', "boardUpdate", targets)

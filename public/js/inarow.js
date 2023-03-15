@@ -1,3 +1,4 @@
+
 function listToString(liste, num = 0) {
     let CodeArray = ["!","@", "#", "$", "%", "&", "/", "(", ")", "="]
     let listToStringEle = ""
@@ -285,6 +286,7 @@ source.addEventListener("message", message => {
     updateBoard(message.message.board)
   } else if (message.messageType === "boardMake") {
     dim = stringToList(message.message.dim)
+    console.log(dim)
     tile_size = Math.min(ww*wp/dim[0], wh*wp/dim[1])
     form.style.visibility = "hidden"
     canvas.style.visibility = "visible"
@@ -402,8 +404,8 @@ function update_Overview(list) {
     ov.innerHTML = txt
 }
 
-auth()
 
+//--------------------- Auth --------------------
 function auth(){
     var xhp = new XMLHttpRequest(); // initierer en ny request
     xhp.responseType = 'text';
@@ -414,7 +416,6 @@ function auth(){
     xhp.timeout = 2000;
   
     xhp.onload = () => {
-      sendingData = false;
       if (xhp.response.includes("no_token")){
         console.log("no_access")
         window.location.replace("/login");
@@ -422,10 +423,11 @@ function auth(){
     }
     xhp.ontimeout = (e) =>{ //connection timed out, resend
       console.log("timeout, try again");
-      sendingData = false;
     }
   }
 
+auth()
+requestgame()
 //når man joiner må man også fetche spill hvis det er i progress
 
 
@@ -455,6 +457,35 @@ function sendChat(message){
   }
 
   xhp.ontimeout = (e) =>{ //connection timed out, resend
+    console.log("connection timed out");
+  }
+}
+
+
+function requestgame(){
+    var xhp = new XMLHttpRequest(); // initierer en ny request
+    xhp.responseType = 'text';
+
+    xhp.open("POST","/requestgame/"+ token + "/" + gameId, true); //man setter url til meldingen
+    xhp.send();
+
+    xhp.timeout = 2000;
+
+    xhp.onload = () => {
+        if (xhp.parse.includes("game_not_prog")){  //hvis spillet ikke er i gang
+            return;
+        }
+        
+        message = JSON.parse(xhp.response)
+        console.log(message.dim)
+        dim = stringToList(message.dim)
+        console.log(dim)
+        tile_size = Math.min(ww*wp/dim[0], wh*wp/dim[1])
+        form.style.visibility = "hidden"
+        canvas.style.visibility = "visible"
+    }
+
+    xhp.ontimeout = (e) =>{ //connection timed out, resend
     console.log("connection timed out");
   }
 }

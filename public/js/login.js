@@ -102,3 +102,6 @@ function tryTokenAuth(token){
 //sende en token til bruker på login, burde holdes styr på i databasen. For at meldinger skal gå igjennom, må denne tokenen attaches til alle post requests, og valideres av serveren.
 //altså lese token, og sjekke om den stemmer med brukeren. 
 //dette er fucka insecure men igjen bryr vi oss ikke veldig om sikkerhet
+
+//prøve login på pageload hvis man har token
+//hvis man har token men ikke klarer å logge seg inn, vis melding "du har blitt logget av"
