@@ -9,6 +9,7 @@ var sharp = require('sharp')
 var port = 3000
 var express = require('express');
 var app = express();
+var multer = require('multer')
 
 var lobby = {}
 var users = {"f":{"username": "f"}}; //initierer brukere
