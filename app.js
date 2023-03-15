@@ -242,10 +242,11 @@ let game = new Game([5,5], 4, ["test", "test2"])
 app.post("/boardupdate/:token/:collum/:lobbyId", (req, res) => {
   var token = req.params["user"]
   var collum = req.params["collum"]
+  let lobbyId = req.params["lobbyId"]
   //finn riktig game -> user.game
   //if (user = game.tokens[game.turn]) {game.place(collum); publishBoard(game.board, game.tokens)}
   console.log(collum + " fra:" + token)
-  game.place(collum)
+  lobby[lobbyId]["game"].place(collum)
   //else {publishBoard(game.board, [user])}
 
   //sender respons 
@@ -253,35 +254,50 @@ app.post("/boardupdate/:token/:collum/:lobbyId", (req, res) => {
 
   let players = (Object.keys(lobby[req.params["lobbyId"]]["users"])) //finner alle spillerne i gamet
 
-  publishBoard(game.board,game.turn, players);
+  publishBoard(lobby[lobbyId]["game"].turn, players,lobbyId);
 })
 
 //start game
 app.post("/game_start/:x/:y/:l/:lobbyId", (req, res) => {
   var dim = [parseInt(req.params["x"]), parseInt(req.params["y"])]
   var winn_l = req.params["l"]
+  let lobbyId = req.params["lobbyId"]
 
-  //sjekke om lobby finnes
-  //sette lobby["lobby"] til new lobby med antall brukere
+  if (!lobby.hasOwnProperty(req.params["lobbyId"])){ //hvis lobbyen ikke finnes
+    res.send("no_game");
+    return;
+  }
+
+  if (lobby[lobbyId].hasOwnProperty("game")){ //hvis game finnes, slett game
+    console.log("deleting game")
+    delete lobby[lobbyId]["game"]
+  }
+
+
+  lobby[lobbyId]["game"] = new Game(dim, winn_l, ["test", "test2"])
+
+  console.log(lobby[lobbyId]["game"])
+  //sette lobby["game"] til new game med antall brukere
+
   console.log("New game:", dim, winn_l)
-  game = new Game(dim, winn_l, ["test", "test2"])
 
   res.send("recieved")
 
-  let players = (Object.keys(lobby[req.params["lobbyId"]]["users"]))
+  let players = (Object.keys(lobby[lobbyId]["users"]))
 
   makeBoard(dim, players)
-  publishBoard(game.board, game.turn, players)
+  publishBoard(lobby[lobbyId]["game"].turn, players,lobbyId)
 })
 
 //publish board
-function publishBoard(board, turn, targets) {
+function publishBoard(turn, targets,lobbyId) {
   //sender board till alle i listen targets
   //board: 2Darray+
   //tokens: array
-  message = listToString(board)
+  console.log(lobby[lobbyId]["game"])
+  message = listToString(lobby[lobbyId]["game"])
   //message = listToString(board)
-  publishServerMessage('{"board":"'+listToString(board)+'","turn":"'+turn+'"}', "boardUpdate", targets)
+  publishServerMessage('{"board":"'+listToString(lobby[lobbyId]["game"].board)+'","turn":"'+turn+'"}', "boardUpdate", targets)
 }
 
 //lage brett
