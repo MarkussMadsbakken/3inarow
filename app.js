@@ -14,6 +14,9 @@ var multer = require('multer')
 var lobby = {}
 var users = {"f":{"username": "f"}}; //initierer brukere
 
+var sharp = require('sharp'); //image processing
+var multer = require('multer'); //file upload
+
 
 //starte server
 app.listen(port)
@@ -491,6 +494,48 @@ app.get('/user/:user', async function(req,res){ //kan hende async fucker opp et 
   }
 
   res.sendFile(path.join(__dirname, "userpage.html")); //sender userpage
+})
+
+
+var storage = multer.memoryStorage(); //buffer
+
+var imgFilter = (req, file, cb) => { //image filter fra stackoverflow :)
+  if (file.mimetype.split("/")[0] === 'image') {
+      cb(null, true);
+  } else {
+      cb(new Error("Only images are allowed!"));
+  }
+};
+
+imageUploader = multer({ //multer init
+  storage,
+  fileFilter: imgFilter
+});
+
+app.post('/pfpUpload/:token/:username', imageUploader.single('icon'), async function (req, res, next) {
+  //sjekke om token og brukernavn matcher
+  if (req.file === undefined){
+    res.send("rejected")
+    return
+  }
+  sharp(req.file.buffer).resize(100,100).toFile(__dirname+'/public/uploads/'+req.params["username"]+'.png', (err,info) => {if (err) throw err})
+  res.send("accepted")
+  // req.body will hold the text fields, if there were any
+  })
+
+
+
+app.post('/requestInfo/:user', function (req,res){
+  //her henter vi match-historikk og elo
+  res.send("ok")
+})
+
+
+app.post('/requestImage/:user', async function (req,res){ //brukes også til å vise bilde i lobby
+  //her henter vi bildet til brukeren og sender det tilbake til brukeren via res.sendfile
+  console.log("requesr")
+  console.log(__dirname+"/public/uploads/"+req.params["user"]+".png")
+  res.sendFile(__dirname+"/public/uploads/"+req.params["user"]+".png")
 })
 
 
