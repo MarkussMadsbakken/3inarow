@@ -470,9 +470,24 @@ app.post('/signup/:username/:password', (req,res) =>{
 
     addUser(username, password, res);
 })
+
 app.post('/logout/:token', (req,res) => {
   logOut(req.params["token"]);
   res.send("logout"); 
+})
+
+
+
+// ----------- userpage -----------
+
+app.get('/user/:user', async function(req,res){ //kan hende async fucker opp et par ting. Kanskje bytt til .then()?
+  let db = await fetchData();
+  if (!db.hasOwnProperty(req.params["user"])){ //hvis brukeren ikke finnes
+    res.sendFile(path.join(__dirname, "userNotFound.html")); //sender user not found
+    return
+  }
+
+  res.sendFile(path.join(__dirname, "userpage.html")); //sender userpage
 })
 
 
