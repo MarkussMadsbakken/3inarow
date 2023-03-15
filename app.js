@@ -4,6 +4,8 @@ var fs = require('fs');
 var path = require("path");
 var util = require('util')
 
+var sharp = require('sharp')
+
 var port = 3000
 var express = require('express');
 var app = express();
