@@ -518,8 +518,10 @@ app.post('/pfpUpload/:token/:username', imageUploader.single('icon'), async func
     res.send("rejected")
     return
   }
-  sharp(req.file.buffer).resize(100,100).toFile(__dirname+'/public/uploads/'+req.params["username"]+'.png', (err,info) => {if (err) throw err})
-  res.send("accepted")
+  sharp(req.file.buffer).resize(100,100).toFile(__dirname+'/public/uploads/'+req.params["username"]+'.png')  //resizer og lagrer
+  .then((data) => {
+    res.send("uploaded"); //sender melding om at den ble lastet opp
+  })
   // req.body will hold the text fields, if there were any
   })
 
