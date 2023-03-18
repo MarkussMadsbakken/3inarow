@@ -25,4 +25,18 @@ upload.addEventListener("submit", function(e){
     .catch((err) => ("error" + err))
 });
 
-document.getElementById("pfp").innerHTML = "<img src='/uploads/" + user + ".png'>";
+
+function checkImage(path){ //metode for å sjekke om ett bilde eksisterer
+  fetch(path, {method: "head"})
+    .then(res => {
+      if (res.ok) {
+        document.getElementById("pfp").innerHTML = "<img src='/uploads/" + user + ".png'>"; //onload
+      } else {
+        document.getElementById("pfp").innerHTML = "<img src='/uploads/default.png'>"; //onerr
+      }
+    })
+    .catch(err => console.log(err)) //onerr
+}
+
+checkImage("/uploads/"+user+".png")
+
