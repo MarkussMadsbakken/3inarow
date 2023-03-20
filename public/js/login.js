@@ -24,6 +24,9 @@ loginbutton.addEventListener("click",function(){
     let nameinputvalue = document.getElementById("username").value;
     let passinputvalue = document.getElementById("password").value;
     document.getElementById("password").value = "";
+
+    sessionStorage.setItem("username",nameinputvalue)
+
     sendLogin(nameinputvalue, passinputvalue);
 })
 

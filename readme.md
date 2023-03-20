@@ -28,6 +28,7 @@ __For å teste med mer enn 5 brukere må man åpne en annen nettleser (f.eks fir
 * lagre board-klassen i lobby
 * spar plass ved uglify og beautify (burde lagre originalfilene et sted) https://beautifier.io/ og https://skalman.github.io/UglifyJS-online/
 * skrive om post til en enkel funskjon med path og message istedenfor å lage en million ulike?
+* skrive om auth slik at man kan være på nettsiden uten å ha logget seg inn
 
 
 Elo: 

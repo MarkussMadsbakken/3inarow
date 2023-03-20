@@ -1,4 +1,5 @@
 token = sessionStorage.getItem("token");
+username = sessionStorage.getItem("username")
 
 var sendingData = false;
 
@@ -103,3 +104,22 @@ function makegame(){
 }
 
 window.setInterval(fetchGames,5000) //henter spill hvert femte sekund
+
+
+function checkImage(path){ //metode for å sjekke om ett bilde eksisterer. OUTPUTTER ALLTID ERROR? vet ikke om det er mulig å fikse
+  fetch(path, {method: "head"})
+    .then(res => {
+      if (res.ok) {
+        document.getElementById("profile").innerHTML = "<img src='/uploads/" + username + ".png'>"; //onload
+      } else {
+        document.getElementById("profile").innerHTML = "<img src='/uploads/default.png'>"; //onerr
+      }
+    })
+    .catch(err => console.log(err)) //onerr
+}
+
+function goProfile(){
+  window.location = "/user/"+username
+}
+
+checkImage("/uploads/"+username+".png")

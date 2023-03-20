@@ -26,7 +26,7 @@ upload.addEventListener("submit", function(e){
 });
 
 
-function checkImage(path){ //metode for å sjekke om ett bilde eksisterer
+function checkImage(path){ //metode for å sjekke om ett bilde eksisterer. OUTPUTTER ALLTID ERROR? vet ikke om det er mulig å fikse
   fetch(path, {method: "head"})
     .then(res => {
       if (res.ok) {
