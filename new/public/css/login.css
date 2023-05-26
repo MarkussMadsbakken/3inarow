@@ -1,0 +1,81 @@
+/*----------login-----------*/
+#errormsg{
+    margin: auto;
+    display: flex;
+    position: relative;
+    justify-content: center;
+    color: #e03f3f;
+    padding-top: 30px;
+    font-family: Helvetica;
+}
+
+#loginPage{
+    margin: auto;
+    position: relative;
+    justify-content: center;
+    display: flex;
+}
+
+#loginForm{
+    width: 40%;
+}
+
+
+.submit{
+    background-color: #dadada;
+    border: none;
+    width: 100%;
+    height: 5vh;
+    text-align: center;
+    font-size: 12pt;
+    
+    transition: background-color 0.2s ease-in-out;
+
+    -webkit-transition: box-shadow 0.4 ease-out;
+    transition: box-shadow 0.4s ease-out;
+}
+.submit:hover{
+    background-color: #adadad;
+
+    /* box
+    box-shadow: 1px 1px 1px #8b8b8b;
+    */
+}
+.submit:focus{
+    outline-width: 0;
+    background-color: #adadad;
+
+    /* box
+    box-shadow: 5px 5px 5px #8b8b8b;
+    */
+}
+
+.formelement{
+    padding-top: 20px;
+    width: 100%;
+}
+.field{
+    padding-top: 10px;
+    border: none;
+    text-align:left;
+    padding-bottom: 8px;
+    text-indent: 10px;
+    width: 100%;
+    background-color:#ececec;
+    height: 4vh;
+}
+
+.field:focus{
+    outline-width: 0;
+}
+
+
+#header{
+    font-family: Helvetica;
+    display: flex;
+    justify-content: center;
+    letter-spacing: 0.2;
+    font-size: 5vw;
+
+    padding-top: 3vw;
+}

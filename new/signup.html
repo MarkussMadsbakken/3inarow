@@ -1,0 +1,32 @@
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="/css/login.css"/>
+        <link rel="stylesheet" type="text/css" href = "/public/css/login.css">
+    </head>
+<body>
+    <div id="nav" class="logInNav">
+
+    </div> 
+
+    <div id="maincontent">
+    
+        <div id="header">SIGN UP</div>
+
+        <div id="loginPage">
+            <div id="loginForm">
+                <div id="form">
+                    <!-- annoying google password manager, vet ikke hvordan man fikser -->
+                    <div class="formelement"><input id = "username" type="txt" name ="Username" class = field autocomplete="off" placeholder="Username" data-lpignore="true"></div>
+                    <div class="formelement"><input id = "password" type="password" name="Password" class = field autocomplete="off" placeholder="Password" data-lpignore="true"></div>
+                    <div class="formelement"><input id = "submitbutton" type="submit" class="submit" name="knapp" value="LOG IN" data-lpignore="true"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class = error>
+            <div id = errormsg></div>
+        </div>
+    </div>
+</body>
+<script src="js/signup.js"></script>
+</html>
