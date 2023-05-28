@@ -1,3 +1,5 @@
+
+
 var nameinput = document.getElementById("username");
 var passinput = document.getElementById("password");
 var loginbutton = document.getElementById("submitLogin")
@@ -57,22 +59,20 @@ async function sha256(message) { //metode for å hashe en string
 function publishLogin(username, password){
     var xhp = new XMLHttpRequest(); // initierer en ny request
     xhp.responseType = 'text';
-  
     xhp.open("POST","/login/"+ username + "/" + password,true); //man setter url til meldingen
-    xhp.send();
+    xhp.setRequestHeader("Content-Type", "application/json")
+    xhp.send(JSON.stringify({"username": username, "password": password}));
 
     xhp.timeout = 2000;
   
     xhp.onload = () => {
 
-      if (xhp.response.includes("login:")){
-        sessionStorage.setItem("token",xhp.response.split(":")[1]); //splitter rundt ":" og setter sessionstorage til verdien etter 
-        console.log(sessionStorage.getItem("token"));
-        window.location.replace("/")
+      if (xhp.response.includes("login")){
+        window.location = "/"
+      } else {
+        errormsg.innerHTML = (JSON.parse(xhp.response)["message"]); //parse og display error. Passport outputter alltid json
+        }
       }
-
-      errormsg.innerHTML = (xhp.response);
-    }
     
     xhp.ontimeout = (e) =>{ //connection timed out
       console.log("timeout, try again");

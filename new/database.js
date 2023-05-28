@@ -1,10 +1,9 @@
 const sqlite3 = require('sqlite3').verbose();
 
-const dbPath = ".db.db" //siden programmet kalles fra /database, lages det en mappe i samme navn? rart
+const dbPath = "./database/db.db" //siden programmet kalles fra /database, lages det en mappe i samme navn? rart
 
-function dbinit(){ //initierer databasen
+async function dbinit(){ //initierer databasen
     const db = new sqlite3.Database(dbPath)
-    console.log(dbPath)
     db.serialize(() => {
         db.run('CREATE TABLE users (username TEXT, password TEXT, created TEXT, games TEXT)')
         db.close();
@@ -12,7 +11,7 @@ function dbinit(){ //initierer databasen
     })
 }
 
-function userinit(username, password){ //initiere bruker i databasen
+async function userinit(username, password){ //initiere bruker i databasen
     const db = new sqlite3.Database(dbPath) //vet ikke om man trenger å skrive inni men hvem skal stoppe med
   
     const values = [username, password, Date.now().toString(), "{}"] //we love verdier
@@ -22,7 +21,7 @@ function userinit(username, password){ //initiere bruker i databasen
     })
 }
 
-function deleteuser(username){ //slette bruker fra databasen
+async function deleteuser(username){ //slette bruker fra databasen
     const db = new sqlite3.Database(dbPath);
     db.serialize(() => {
         db.run('DELETE FROM users WHERE username = "' + username + '"');
@@ -30,14 +29,15 @@ function deleteuser(username){ //slette bruker fra databasen
     })
 }
 
-function getUserInfo(username){
-    const db = new sqlite3.Database(dbPath)
+function getUserInfo(username){ //hente informasjonen til en bruker ved gitt brukernavn
+    return new Promise((resolve) => {
+        const db = new sqlite3.Database(dbPath)
 
-    db.get('SELECT * FROM users WHERE username = "' + username  +'"', function(err, user){
-        if (err) {return "error: " + err;}
-        if (!user) {return "error: no_user"}
-
-        return user
+        db.get('SELECT * FROM users WHERE username = "' + username  +'"', function(err, user){
+            if (err) {resolve( {"error": + err})}
+            if (!user) {resolve({"error": "no_user"})}
+            return resolve(user)
+        })
     })
 }
 

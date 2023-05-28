@@ -1,0 +1,26 @@
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="/css/index.css"/>
+    </head>
+    <body>
+        <div class = "nav">
+            <a onclick = "goHome()"> Hjem </a> <!-- her kan vi sende en melding til serveren om at brukeren ønsker å gå tilbake-->
+            <a onclick = "copyGameLink()"> firepårad/gameid </a> <!-- kopiere lenke når trykket-->
+            <div class = "sitetitle"> index </div> 
+            <a onclick = "goProfile()" id = "profile">  </a>
+        </div>
+
+        <div class = "maincontent">
+            <div id = "showgames">
+            </div>
+        </div>
+
+        <div id = "loggut"> 
+            <button id = loggutb type = "button"> log off </button>
+        </div>
+        <div id = "makegame">
+            <button id = "creategame" type = "button" onclick="makegame()"> make game</button>
+        </div>
+        <script src = "/js/index.js"></script>
+    </body>
+</html>
