@@ -27,8 +27,6 @@ loginbutton.addEventListener("click",function(){
     let passinputvalue = document.getElementById("password").value;
     document.getElementById("password").value = "";
 
-    sessionStorage.setItem("username",nameinputvalue)
-
     sendLogin(nameinputvalue, passinputvalue);
 })
 
@@ -68,7 +66,9 @@ function publishLogin(username, password){
     xhp.onload = () => {
 
       if (xhp.response.includes("login")){
+        localStorage.setItem("username",xhp.response.split(":")[1])
         window.location = "/"
+
       } else {
         errormsg.innerHTML = (JSON.parse(xhp.response)["message"]); //parse og display error. Passport outputter alltid json
         }

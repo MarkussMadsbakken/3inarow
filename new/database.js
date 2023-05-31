@@ -1,8 +1,9 @@
 const sqlite3 = require('sqlite3').verbose();
 
-const dbPath = "./database/db.db" //siden programmet kalles fra /database, lages det en mappe i samme navn? rart
+var dbPath = __dirname + "/database/db.db" //siden programmet kalles fra /database, lages det en mappe i samme navn? rart
 
 async function dbinit(){ //initierer databasen
+    console.log(dbPath)
     const db = new sqlite3.Database(dbPath)
     db.serialize(() => {
         db.run('CREATE TABLE users (username TEXT, password TEXT, created TEXT, games TEXT)')
@@ -13,7 +14,7 @@ async function dbinit(){ //initierer databasen
 
 async function userinit(username, password){ //initiere bruker i databasen
     const db = new sqlite3.Database(dbPath) //vet ikke om man trenger å skrive inni men hvem skal stoppe med
-  
+    
     const values = [username, password, Date.now().toString(), "{}"] //we love verdier
     db.serialize(() => { //man må ha dette med?
         db.run('INSERT INTO users VALUES (?, ?, ?, ?)', values); //sette inn verdier i databasen
@@ -40,6 +41,7 @@ function getUserInfo(username){ //hente informasjonen til en bruker ved gitt bru
         })
     })
 }
+
 
 module.exports = { //eksportere funksjoner
     dbinit,

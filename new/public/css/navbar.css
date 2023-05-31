@@ -1,0 +1,167 @@
+/*         ------------------    nav bar   --------------             */
+.nav {
+    /* navigasjonslinjen */
+    display: flex;
+    align-items:center;
+    flex-flow: row;
+    padding: 0;
+    background-color: #6e6d71;
+    position: relative;
+    top: 0;
+    width: 100%;
+    height: 6vh;
+    user-select: none;
+}
+
+.nav >* {
+    margin-right: 5vw;
+    color: #eaeaea;
+}
+.nav:first-child{
+    padding-left: 1vw;
+}
+
+#goHome {
+    cursor: pointer;
+}
+
+
+/*  profil   */
+
+/* noe fishy business når man resizer horisontalt... */
+.profileWrapper{
+    margin-left: auto;
+    width: 6vh;
+    height: inherit;
+    object-fit: contain;
+    display: block;
+    margin-right: 2vh;
+}
+
+.profileWrapper > a {
+    cursor: pointer;
+}
+
+.profilePopup:focus{
+    outline: none;
+}
+
+.profileWrapper > div {
+    visibility: hidden;
+    opacity: 0;
+}
+
+.profileWrapper:focus > div{
+    visibility: visible;
+    opacity: 1;
+}
+
+#navProfileWrapper{
+    height: inherit;
+    width: inherit;
+}
+#navProfile {
+    display: flex;
+    align-items: center;
+    height: inherit;
+    width: inherit;
+    overflow: hidden;
+}
+
+#navProfile > img{
+    height: 80%;
+}
+
+/* popup container */
+.profilePopup{
+    background-color: #fcfcfc;
+    z-index: 1;
+    border-radius: 2px;
+    border: 1px solid black;
+    position: fixed;
+    display: inline;
+    top: 7vh;
+    color: black;
+    right: 1vh;
+    height: 30vh;
+    width: 25vw;
+    box-shadow: 0 0 5px #504a4a;
+    opacity: 0;
+
+    transition: opacity 0.15s ease-out;
+}
+
+.profilePopup:focus-within{
+    visibility: visible;
+    opacity: 1;
+}
+.profilePopup:hover{
+    visibility: visible;
+    opacity: 1;
+}
+
+.popupContent{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 1vh;
+    margin-left: 1vh;
+}
+
+.popupContent:last-child{
+    padding-top: 2vh;
+}
+
+.sitetitle{
+    /* skriver lobbynavn */
+    position: absolute;
+    color: #eaeaea;
+    left: 0;
+    width: 98.5%;
+    font-family: Helvetica;
+    text-align: center;
+    letter-spacing: 0.2px;
+    padding-top: 14px;
+    padding-bottom: 14px;
+    pointer-events: none; /* siden sitetitle ligger over hele navigasjonslinjen, må dette til får å kunne fokusere på elementene under */
+}
+
+.profileButton{
+    background-color: #dadada;
+    border: none;
+    width: 20vw;
+    height: 5vh;
+    text-align: center;
+    font-size: 12pt;
+    margin-top: 2vh;
+    
+    transition: background-color 0.2s ease-in-out;
+
+    -webkit-transition: box-shadow 0.4 ease-out;
+    transition: box-shadow 0.4s ease-out;
+}
+
+.profileButton:hover{
+    background-color: #adadad;
+
+    /* box
+    box-shadow: 1px 1px 1px #8b8b8b;
+    */
+}
+.profileButton:focus{
+    outline-width: 0;
+
+    /* box
+    box-shadow: 5px 5px 5px #8b8b8b;
+    */
+}
+
+#showUserName{
+    font-weight: bold;
+    text-align: center;
+}
+
+.notLoggedInMessage{
+    font-weight: bold;
+    text-align: center;
+}
