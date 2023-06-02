@@ -1,7 +1,5 @@
-token = sessionStorage.getItem("token");
 
-
-var source = new EventSource("/serverMessages/" + token);
+var source = new EventSource("/serverMessages/");
 source.addEventListener("message", message => {
     var message = JSON.parse(message.data); //gjør om til dictionary
     //console.log("type: "+message.messageType)
@@ -48,7 +46,6 @@ function join(gameid){
 }
 
 function makegame(){
-  let token = sessionStorage.getItem("token")
 
   var xhp = new XMLHttpRequest(); // initierer en ny request
   xhp.responseType = 'text';

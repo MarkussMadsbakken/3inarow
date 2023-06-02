@@ -5,6 +5,9 @@ document.getElementById("goLogin").addEventListener("click", function(){
 document.getElementById("goProfile").addEventListener("click", function() {
   window.location = "/user/"+username
 })
+document.getElementById("goSignup").addEventListener("click", function(){
+    window.location = "/signup"
+})
 
 var username = ""
 
@@ -33,7 +36,6 @@ function publishLogout(){
 }
 
 function checkImage(path){ //metode for å sjekke om ett bilde eksisterer. OUTPUTTER ALLTID ERROR? vet ikke om det er mulig å fikse
-    console.log("2")
     fetch(path, {method: "head"})
       .then(res => {
         if (res.ok) {
@@ -55,7 +57,6 @@ function getLoggedIn(){
     xhp.timeout = 2000;
   
     xhp.onload = () => {
-      console.log(xhp.response)
       if (xhp.response.includes("LoggedIn:")){
         //hvis brukeren er logget inn
         username = xhp.response.split(":")[1];

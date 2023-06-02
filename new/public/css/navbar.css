@@ -76,8 +76,7 @@
 .profilePopup{
     background-color: #fcfcfc;
     z-index: 1;
-    border-radius: 2px;
-    border: 1px solid black;
+    border-radius: 10px;
     position: fixed;
     display: inline;
     top: 7vh;
@@ -139,6 +138,8 @@
 
     -webkit-transition: box-shadow 0.4 ease-out;
     transition: box-shadow 0.4s ease-out;
+
+    cursor: pointer;
 }
 
 .profileButton:hover{

@@ -1,0 +1,159 @@
+body {
+    margin: 0;
+    font-family: Helvetica;
+    overflow-y: hidden; /* Hide vertical scrollbar */
+    overflow-x: hidden; /* Hide horizontal scrollbar */
+}
+
+#game{
+
+    width: 80vw;
+    height: 80vh;
+
+    pointer-events: auto;
+}
+
+/* popup */
+
+#endGamePopup{
+    outline: none;
+
+    background-color: #fcfcfc;
+    z-index: 1;
+    border-radius: 2px;
+    border: 1px solid black; 
+    position: fixed;
+    display: flex;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60%; 
+    height: 60%;
+
+    align-items: center;
+    flex-direction: column;
+
+    opacity: 0;
+    pointer-events: none;
+
+    user-select: none;
+
+    transition: opacity 0.5s ease-in-out;
+}
+
+#messageText{
+    margin-top: 4vh;
+    text-align: center;
+    width: 80%;
+}
+
+#extras{
+    margin-top: 4vh;
+}
+
+#startGame{
+    margin-top: 4vh;
+    background-color: #dadada;  
+    border: none;
+    width: 25vw;
+    height: 10vh;
+    text-align: center;
+    font-size: 12pt;
+    
+    transition: background-color 0.2s ease-in-out;
+
+    -webkit-transition: box-shadow 0.4 ease-out;
+    transition: box-shadow 0.4s ease-out;
+}
+
+#startGame:hover{
+    background-color: #adadad;
+}
+
+#startGame:focus{
+    outline-width: 0;
+    background-color: #adadad;
+}   
+
+.field{
+    padding-top: 6px;
+    margin-top: 2vh;
+    height: 4vh;
+    border: none;
+    text-align:left;
+    padding-bottom: 8px;
+    text-indent: 10px;
+    width: 25vw;
+
+    background-color: #dadada;
+}
+
+.field:focus{
+    outline-width: 0;
+}
+
+#playAgainstAi{
+    align-items: center;
+    flex-direction: row;
+    display: flex;
+    
+}
+  
+.check{
+    border-radius: 1px;
+    width: 4vw;
+    height: 4vh;
+}
+
+
+
+/* chat */
+
+.chat {
+    position: absolute;
+    left: 80vw;
+    width: 22vw;
+    height: calc(100vh - 50px);
+    top: 6vh;
+    background-color: #bbbbbb;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
+}
+
+
+#typeField {
+    margin-top: 20px;
+    margin-bottom: 60px;
+}
+
+input:focus{
+    outline: none;
+}
+
+#msgContainer{
+    width: 100%;
+    margin-top: auto;
+}
+
+.chatElement{
+    margin-top: 0.2vw;
+    margin-left: 2vw;
+    margin-right: 2vw;
+    float: left;
+    width: calc(100% - 4vw);
+    overflow: hidden;
+    font-size: 1vw;
+}
+
+.chatName{
+    display: inline-block;
+    font-weight: bold;
+    font-size: 0.9vw;
+    margin-top: 1vw; 
+}

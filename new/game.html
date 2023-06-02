@@ -1,7 +1,8 @@
+<!doctype html>
 <html>
     <head>
-        <link rel = "stylesheet" type="text/css" href = "/css/navbar.css"/>
-        <link rel="stylesheet" type="text/css" href="/css/userpage.css"/>
+        <link rel="stylesheet" type="text/css" href="/css/game.css"/>
+        <link rel = "stylesheet" type = "text/css" href = "/css/navbar.css"/>
     </head>
     <body>
         <div class = "nav">
@@ -50,43 +51,60 @@
             </div>
             <div class = "sitetitle"> index </div> 
         </div>
+
         <div class = "maincontent">
-            <div class = "profileInfo">
-                <div class = "profilePictureWrapper">
-                    <div class = "profilePicture">
-                        <div id = "pfp">
-                        </div>
-                        <form class = "uploadform">
-                            <input type="file" id = "file" name="icon" />
-                            <input type="submit" value = "send"/>
-                        </form>
+            <div id = "game">
+                <script src ="/conai/libs/pixi.min.js"> </script>
+                <script src = "/js/conai.js"> </script>
+                <script src = "/js/game.js"> </script>
+            </div>
+
+            <div id = "endGamePopup">
+                <div id = "messageText">
+                    Start nytt spill?
+                </div>
+
+                <div id = "playersBox">
+                    <input id = "numPlayers" placeholder="Antall spillere" class = "field">
+                </div>
+
+                <div id = "sizeSelect">
+                    <div id = "xSizeBox">
+                        <input id = "xSize" placeholder="bredde" class = "field">
+                    </div>
+
+                    <div id = "ySizeBox">
+                        <input id = "ySize" placeholder="høyde" class = "field">
                     </div>
                 </div>
 
-                <div class = "accountInfoWrapper">
-                    <div class = "usernameWrapper">
-                        <div id = "username">
-                        </div>
-                        <div id = "changeUsername">
-                            <button type = "button" class = "changeUsernameButton"> Endre? </button>
-                        </div>
+                <div id = "extras">
+                    <div id = "playAgainstAi">
+                        <div id = "aiText"> Spill mot ai?</div>
+                        <input id = "aiCheck" type="checkbox" class = "check">
                     </div>
+                </div>
 
-                    <div class = "moreInfoWrapper">
-                        <div id = "rating">
-                            <!-- når vi har implimentert ranks, legg inn unikt banner/ikon her -->
-                        </div>
-                        <div id = "joined">
-                        </div>
-                    </div> 
+                <div id = "startGameBox">
+                    <input id = "startGame" type = "submit" value ="Start">
+                </div>
 
-                </div> 
             </div>
-            <div id = "gamesInfo">
-                <!-- alle spill brukeren har spilt. Resulat, rating, når og hvor mye rating mistet/vunnet -->
-            </div>
+            <div class = "chat">
+                <!-- burde ikke være vanskelig å implimentere
+                chat etter vi har laget spillet-->
+    
+                    <div id = "msgContainer">
+                    </div>
+                    
+                    <div id = "typeField">
+                        <input id = "typebox" placeholder="chat">
+                    </div>
+                </div>
+                <div class = "playerOverview">
+                </div>
         </div>
-        <script src = "/js/navbar.js"></script>
-        <script src = "/js/userpage.js"></script>
     </body>
+    <script src = "/js/navbar.js"></script>
+    <script src = "/js/chat.js"></script>
 </html>

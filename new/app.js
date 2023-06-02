@@ -122,13 +122,22 @@ app.post("/logout", (req,res) => {
 
 })
 
-//index
+// ----------- signup -----------
+app.get("/signup", function(req,res){
+    res.sendFile(path.join(__dirname, 'signup.html'));
+})
+
+
+
+// ----------- index -----------
 app.get("/", function(req, res){
     res.sendFile(path.join(__dirname, "index.html"))
 })
 
 
-//userpage
+
+
+// ----------- userpage -----------
 
 const multer = require('multer')
 const sharp = require('sharp')
@@ -168,7 +177,7 @@ app.post('/pfpUpload/:username', imageUploader.single('icon'), async function (r
     }
     if (req.user){
         if(req.params["username"] == req.user.username){
-            sharp(req.file.buffer).resize(100,100).toFile(__dirname+'/public/uploads/'+req.params["username"]+'.png')  //resizer og lagrer
+            sharp(req.file.buffer).resize(250,250).toFile(__dirname+'/public/uploads/'+req.params["username"]+'.png')  //resizer og lagrer
             .then((data) => {
                 res.send("uploaded"); //sender melding om at den ble lastet opp
             })
@@ -183,17 +192,47 @@ app.post('/pfpUpload/:username', imageUploader.single('icon'), async function (r
   
   
   
-  app.post('/requestInfo/:user', function (req,res){
+app.post('/getUserInfo/:user', function (req,res){
     //her henter vi match-historikk og elo
-    res.send("ok")
-  })
+    database.getUserInfo(req.params["user"]).then(userInfo => {
+        if(userInfo){
+            var games = '"games":'+userInfo["games"]
+            var created = '"created":"'+userInfo["created"]+'"'
+            var elo = '"elo":"'+userInfo["elo"]+'"'
+            var editAccess = false
+            //når ranks, returner egen rank logikk her basert på elo
+
+            if(req.user){
+                if (req.user.username == req.params["user"]){
+                    editAccess = true
+                }
+            }
+            
+            res.send('{'+games+','+created+','+elo+','+'"editAccess":"'+editAccess+'"}')
+
+        } else {
+            res.send("error")
+        }
+    })
+})
   
   
-  app.post('/requestImage/:user', async function (req,res){ //brukes også til å vise bilde i lobby
+app.post('/requestImage/:user', async function (req,res){ //brukes også til å vise bilde i lobby
     //her henter vi bildet til brukeren og sender det tilbake til brukeren via res.sendfile
     console.log("requesr")
     console.log(__dirname+"/public/uploads/"+req.params["user"]+".png")
     res.sendFile(__dirname+"/public/uploads/"+req.params["user"]+".png")
-  })
+})
+
+
+
+
+
+//game
+app.get('/game/:gameid', async function(req,res){
+    res.sendFile(path.join(__dirname, "game.html"));
+})
+
+
 
 //https://realtimecolors.com/palettes/?colors=000000-ffffff-4685ff-f2f2f2-ffb084

@@ -37,4 +37,38 @@ function checkProfileImage(path){ //metode for å sjekke om ett bilde eksisterer
     .catch(err => console.log(err)) //onerr
 }
 
+function getUserInfo(username){
+  var xhp = new XMLHttpRequest(); // initierer en ny request
+    xhp.responseType = 'text';
+  
+    xhp.open("POST","/getUserInfo/"+username,true); //man setter url til meldingen
+    xhp.send();
+
+    xhp.timeout = 2000;
+  
+    xhp.onload = () => {
+      displayUserInfo(JSON.parse(xhp.response))
+    }
+    
+    xhp.ontimeout = (e) =>{ //connection timed out, resend
+      console.log("timeout, try again");
+    }
+}
+
+async function displayUserInfo(userInfo){
+  document.getElementById("username").innerHTML = user
+  document.getElementById("rating").innerHTML = userInfo["elo"]
+
+  //displaye på en bedre måte. I form av dd/mm/åååå kanskje?
+  var date = new Date(parseInt(userInfo["created"]))
+
+  var day = date.getDate()
+  var month = date.getMonth()+1
+  var year = date.getFullYear()
+
+  document.getElementById("joined").innerHTML = day+"/"+month+"/"+year
+
+}
+
+getUserInfo(user)
 checkProfileImage("/uploads/"+user+".png")

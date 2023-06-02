@@ -4,8 +4,6 @@ var submitbutton = document.getElementById("submitbutton")
 
 var errormsg = document.getElementById("errormsg");
 
-var sendingData = false;
-
 passinput.addEventListener("keydown",function(event){
     if (event.key === "Enter"){
         let nameinputvalue = document.getElementById("username").value;
@@ -45,9 +43,6 @@ async function sha256(message) { //metode for å hashe en string
 }
 
 function publishNewUser(username, password){
-    if (sendingData){return;}
-    sendingData = true;
-  
     var xhp = new XMLHttpRequest(); // initierer en ny request
     xhp.responseType = 'text';
   
@@ -57,7 +52,6 @@ function publishNewUser(username, password){
     xhp.timeout = 2000;
   
     xhp.onload = () => {
-      sendingData = false;
       errormsg.innerHTML = (xhp.response);
     }
     

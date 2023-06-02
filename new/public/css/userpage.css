@@ -6,3 +6,81 @@ body {
     overflow-y: hidden; /* Hide vertical scrollbar */
     overflow-x: hidden; /* Hide horizontal scrollbar */
 }
+
+.maincontent{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.profileInfo{
+    display: flex;
+    flex-direction: row;
+    width: 60vw;
+    height: 20vh;
+    margin-top: 5vh;
+    border: 2px solid black;
+    border-radius: 8px;
+}
+
+.profileInfo > div {
+    margin: 1vh;
+}
+
+.profilePictureWrapper{
+    width: 20vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.profilePicture{
+    display: flex;
+    flex-direction: row;
+    width: 10vw;
+    height: 100%;
+}
+
+#pfp{
+    height: 100%;
+    width: inherit;
+}
+
+#pfp > img {
+    object-fit: contain;
+    width: 100%;
+    height: 100%;
+}
+.accountInfoWrapper{
+    width: 40vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.uploadform{
+    display: none;
+}
+
+.usernameWrapper{
+    display: flex;
+    flex-direction: row;
+}
+
+.usernameWrapper > div{
+    margin: 1vh;
+}
+
+#username{
+    font-weight: bold;
+}
+
+.moreInfoWrapper{
+    display: flex;
+    flex-direction: row;
+}
+
+.moreInfoWrapper > div{
+    margin: 1vh;
+}

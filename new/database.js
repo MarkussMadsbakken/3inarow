@@ -6,18 +6,17 @@ async function dbinit(){ //initierer databasen
     console.log(dbPath)
     const db = new sqlite3.Database(dbPath)
     db.serialize(() => {
-        db.run('CREATE TABLE users (username TEXT, password TEXT, created TEXT, games TEXT)')
+        db.run('CREATE TABLE users (username TEXT, password TEXT, created TEXT, elo INT,  games TEXT)')
         db.close();
-  
     })
 }
 
 async function userinit(username, password){ //initiere bruker i databasen
     const db = new sqlite3.Database(dbPath) //vet ikke om man trenger å skrive inni men hvem skal stoppe med
     
-    const values = [username, password, Date.now().toString(), "{}"] //we love verdier
+    const values = [username, password, Date.now().toString(), 1000, "{}"] //we love verdier
     db.serialize(() => { //man må ha dette med?
-        db.run('INSERT INTO users VALUES (?, ?, ?, ?)', values); //sette inn verdier i databasen
+        db.run('INSERT INTO users VALUES (?, ?, ?, ?, ?)', values); //sette inn verdier i databasen
         db.close(); //lukke databasen
     })
 }

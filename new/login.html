@@ -1,12 +1,55 @@
 <html>
     <head>
         <link rel="stylesheet" type="text/css" href="/css/login.css"/>
-        <link rel="stylesheet" type="text/css" href = "/public/css/login.css">
+        <link rel="stylesheet" type="text/css" href = "/css/navbar.css">
     </head>
 <body>
-    <div id="nav" class="logInNav">
+    <div class = "nav">
+        <a onclick = "goHome()" id = "goHome"> Hjem </a> <!-- her kan vi sende en melding til serveren om at brukeren ønsker å gå tilbake-->
+        <a onclick = "copyGameLink()"> firepårad/gameid </a> <!-- kopiere lenke når trykket-->
+        <div class = "profileWrapper" tabindex="1">
+            <a id = "navProfileWrapper">
+                <div id = "navProfile"> 
+                </div>
+            </a>
+            <div class = "profilePopup">
+                <div class = "popupContent">
+                    <div id ="ifLoggedInContent">
+                        <div id = "showUserName">
 
-    </div> 
+                        </div>
+                        <div class = "profil">
+                            <button id = "goProfile" type = "button" class = "profileButton"> Profil </button>
+                        </div>
+
+                        <div class = "instillinger">
+                            <button id = "goSettings" type = "button" class = "profileButton"> Instillinger </button>
+                        </div>
+
+                        <div class = "loggut"> 
+                            <button id = "loggutb" type = "button" class = "profileButton"> Logg ut </button>
+                        </div>
+                    </div>
+
+                    <div id = "ifNotLoggedInContent">
+                        <div class = "notLoggedInMessage">
+                            Du er ikke logget inn
+                        </div>
+
+                        <div class = "loggInn">
+                            <button id = "goLogin" type = "button" class = "profileButton"> Logg inn </button>
+                        </div>
+
+                        <div class = "signUp">
+                            <button id = "goSignup" type = "button" class = "profileButton"> Lag bruker </button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class = "sitetitle"> index </div> 
+    </div>
 
     <div id="maincontent">
     
@@ -29,4 +72,5 @@
     </div>
 </body>
 <script src="js/login.js"></script>
+<script src="js/navbar.js"></script>
 </html>
