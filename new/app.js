@@ -225,9 +225,6 @@ app.post('/requestImage/:user', async function (req,res){ //brukes også til å 
 })
 
 
-
-
-
 //game
 app.get('/game/:gameid', async function(req,res){
     res.sendFile(path.join(__dirname, "game.html"));
