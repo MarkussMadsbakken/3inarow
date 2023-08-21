@@ -43,15 +43,21 @@ body {
 }
 
 #pfp{
+    display: inline-block;
+    width: 100%;
     height: 100%;
-    width: inherit;
 }
 
 #pfp > img {
     object-fit: contain;
     width: 100%;
     height: 100%;
+}   
+
+#pfp > img:hover{
+    background-color: black;
 }
+
 .accountInfoWrapper{
     width: 40vw;
     display: flex;

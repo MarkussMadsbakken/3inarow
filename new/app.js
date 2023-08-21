@@ -29,7 +29,7 @@ var localStrategy = require('passport-local')
 
 // body-parser 
 const bodyParser = require("body-parser");
-app.use(express.json())
+app.use(express.json()) 
 
 app.use(passport.authenticate('session'));
 app.use(passport.session());
@@ -41,7 +41,7 @@ passport.use('local',new localStrategy(
             if (user.hasOwnProperty("error")){
 
                 let errorcode = user["error"]
-
+                
                 if (errorcode == "no_user"){
                     return cb(null, false, {message: "wrong username or password"})
                 }
