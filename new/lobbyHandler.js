@@ -53,20 +53,36 @@ class lobbyHandler{
     
     addToLobby(lobbyId,user){
         this.removeFromLobby(user)
-
-        this.lobbies[lobbyId]
+        this.lobbies[lobbyId]["players"].push(user)
         return this.lobbies
     }
 
-    removeFromLobby(){
+    removeFromLobby(username){
         //fjern fra alle lobbies
-
-        //  
-
+        Object.values(this.lobbies).forEach(game => {
+            if (game["players"].includes(username)){
+              let index = game["players"].indexOf(username)
+              game["players"].splice(index,1)
+            }
+          });
     }
 
-    deleteLobby(){
+    deleteLobby(code){
+        //finn lobby med owner som navn
+        if (this.lobbies.hasOwnProperty(code)){
+            delete this.lobbies[code]
+            return "deleted"
+        }
 
+        return "no_lobby"
+        //slett
+    }
+
+    getLobbyByCode(code){ //returnerer lobby gitt kode
+        if (this.lobbies[code] != undefined){
+            return this.lobbies[code]
+        }
+        return "no_lobby"
     }
 
     findValidCode(){ //finner en unik kodes
@@ -104,9 +120,12 @@ class lobbyHandler{
 }
 
 
-lobbyHandler = new lobbyHandler
-id = lobbyHandler.makelobby("a")
-console.log(lobbyHandler.addToLobby(id,"a"))
-console.log(lobbyHandler.makelobby("a"))
+//lobbyHandler = new lobbyHandler
+//id = lobbyHandler.makelobby("a")
+//console.log(lobbyHandler.addToLobby(id,"a"))
+//console.log(lobbyHandler.addToLobby(id,"b"))
+//lobbyHandler.removeFromLobby("a")
+//console.log(lobbyHandler.lobbies)
+
 
 //ping server hver 5. sekund med tid, kode og id

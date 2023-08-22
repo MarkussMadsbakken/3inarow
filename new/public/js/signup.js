@@ -52,10 +52,41 @@ function publishNewUser(username, password){
     xhp.timeout = 2000;
   
     xhp.onload = () => {
-      errormsg.innerHTML = (xhp.response);
+        if(xhp.response.includes("user created")){
+            publishLogin(username, password);
+
+        } else {
+            errormsg.innerHTML = (xhp.response);
+        }
     }
     
     xhp.ontimeout = (e) =>{ //connection timed out, resend
+      console.log("timeout, try again");
+    }
+  }
+
+
+function publishLogin(username, password){
+    var xhp = new XMLHttpRequest(); // initierer en ny request
+    xhp.responseType = 'text';
+    xhp.open("POST","/login/"+ username + "/" + password,true); //man setter url til meldingen
+    xhp.setRequestHeader("Content-Type", "application/json")
+    xhp.send(JSON.stringify({"username": username, "password": password}));
+
+    xhp.timeout = 2000;
+  
+    xhp.onload = () => {
+
+      if (xhp.response.includes("login")){
+        localStorage.setItem("username",xhp.response.split(":")[1])
+        window.location = "/"
+
+      } else {
+        errormsg.innerHTML = (JSON.parse(xhp.response)["message"]); //parse og display error. Passport outputter alltid json
+        }
+      }
+    
+    xhp.ontimeout = (e) =>{ //connection timed out
       console.log("timeout, try again");
     }
   }

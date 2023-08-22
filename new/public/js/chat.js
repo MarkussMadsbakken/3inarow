@@ -34,10 +34,10 @@ chatinput.addEventListener("keydown",function(event){
 })
 
 function sendChat(message){
-  var xhp = new XMLHttpRequest(); // initierer en ny request
+  	var xhp = new XMLHttpRequest(); // initierer en ny request
 
-  xhp.open("POST","/chat/"+ token + "/" + message + "/" + gameId, true); //man setter url til meldingen
-  xhp.send();
+  	xhp.open("POST","/chat/"+ token + "/" + message + "/" + gameId, true); //man setter url til meldingen
+  	xhp.send();
 
   xhp.timeout = 2000;
 

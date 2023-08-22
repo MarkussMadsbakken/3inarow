@@ -79,27 +79,6 @@ function publishLogin(username, password){
     }
   }
 
-function tryTokenAuth(token){
-  
-    var xhp = new XMLHttpRequest(); // initierer en ny request
-    xhp.responseType = 'text';
-  
-    xhp.open("POST","/tokenAuth/"+token,true); //man setter url til meldingen
-    xhp.send();
-
-    xhp.timeout = 2000;
-  
-    xhp.onload = () => {
-      if (xhp.response.includes("auth")){
-        console.log("auth")
-        return true;
-      } //evt. else
-    }
-    
-    xhp.ontimeout = (e) =>{ //connection timed out
-      console.log("timeout, try again");
-    }
-  }
 
 
 //sende en token til bruker på login, burde holdes styr på i databasen. For at meldinger skal gå igjennom, må denne tokenen attaches til alle post requests, og valideres av serveren.
