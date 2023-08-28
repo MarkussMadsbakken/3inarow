@@ -9,14 +9,14 @@ function displayChat(chatMessage){
     var prevChatter = "";
   
     chat.forEach(chatMessage => { //display meldinger
-      if (prevChatter === chatMessage.name){ //hvis meldingen sendes av samme person, sendes ikke navn og meldingene legges rett under hverandre (liten space ekstra space i css)
-        document.getElementById("msgContainer").innerHTML = document.getElementById("msgContainer").innerHTML + "<div class = 'chatElement'>" + chatMessage.chatMessage + "</div>"
-      }
-      else{ //ny melding fra en annen person
-        document.getElementById("msgContainer").innerHTML = document.getElementById("msgContainer").innerHTML + "<div class = 'chatElement'> <div class = 'chatName'>"+  chatMessage.name + ":"+ "</div> " + chatMessage.chatMessage + "</div>"
-      }
+      	if (prevChatter === chatMessage.name){ //hvis meldingen sendes av samme person, sendes ikke navn og meldingene legges rett under hverandre (liten space ekstra space i css)
+        	document.getElementById("msgContainer").innerHTML = document.getElementById("msgContainer").innerHTML + "<div class = 'chatElement'>" + chatMessage.chatMessage + "</div>"
+      	}
+      	else{ //ny melding fra en annen person
+        	document.getElementById("msgContainer").innerHTML = document.getElementById("msgContainer").innerHTML + "<div class = 'chatElement'> <div class = 'chatName'>"+  chatMessage.name + ":"+ "</div> " + chatMessage.chatMessage + "</div>"
+      	}
       
-      prevChatter = chatMessage.name //lagrer navn
+      	prevChatter = chatMessage.name //lagrer navn
     }); //vet ikke hvordan men dette fungerer
   }
 
@@ -39,12 +39,12 @@ function sendChat(message){
   	xhp.open("POST","/chat/"+ token + "/" + message + "/" + gameId, true); //man setter url til meldingen
   	xhp.send();
 
-  xhp.timeout = 2000;
+  	xhp.timeout = 2000;
 
-  xhp.onload = () => {
-  }
+  	xhp.onload = () => {
+  	}
 
-  xhp.ontimeout = (e) =>{ //connection timed out, resend
-    console.log("connection timed out");
-  }
+  	xhp.ontimeout = (e) =>{ //connection timed out, resend
+    	console.log("connection timed out");
+  	}
 }
