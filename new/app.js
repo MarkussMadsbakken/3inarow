@@ -8,12 +8,21 @@ const port = 3000
 const express = require('express');
 const app = express();
 
-//express servermessage init
-const compression = require("compression"); //brukes til å fikse sse
-const SSE = require("express-sse");
-const sse = new SSE();
-app.use(compression());
-app.get("/serverMessages/", sse.init);
+//websocket
+var expressWs = require('express-ws')(app);
+
+//ws init
+app.ws("/echo", function(ws, req) {
+    ws.on('message', function(msg) {
+        ws.send(msg);
+    });
+});
+
+//lagre ws i egen liste med brukere
+//ws.send sender til bruker
+//ws.end slett ws
+
+
 
 
 //css
@@ -211,7 +220,7 @@ imageUploader = multer({ //multer init
 app.post('/pfpUpload/:username', imageUploader.single('icon'), async function (req, res, next) {
     //sjekke om token og brukernavn matcher
     if (req.file === undefined){
-      res.send("rejected")
+      res.send("rejected") 
       return
     }
     if (req.user){
