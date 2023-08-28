@@ -16,21 +16,21 @@ upload.addEventListener("submit", function(e){
         body: formdata
     })
     .then((res) => {
-      console.log(res.text().then(function (text) {
-        console.log(text)
-        if (text.includes("uploaded")) {location.reload()} //her kan vi bruke else for å sende errror message
+      	console.log(res.text().then(function (text) {
+        	console.log(text)
+        	if (text.includes("uploaded")) {location.reload()} //her kan vi bruke else for å sende errror message
       }))
     })
 
-    .catch((err) => ("error" + err))
+    .catch((err) => ("error" + err)) 
 });
 
 function checkProfileImage(path){ //metode for å sjekke om ett bilde eksisterer. OUTPUTTER ALLTID ERROR? vet ikke om det er mulig å fikse
   fetch(path, {method: "head"})
     .then(res => {
-      if (res.ok) {
+      if (res.ok) { 
         document.getElementById("pfp").innerHTML = "<img src='/uploads/" + user + ".png'>"; //onload
-      } else {
+      } else { 
         document.getElementById("pfp").innerHTML = "<img src='/uploads/default.png'>"; //onerr
       }
     })
@@ -39,19 +39,19 @@ function checkProfileImage(path){ //metode for å sjekke om ett bilde eksisterer
 
 function getUserInfo(username){
   var xhp = new XMLHttpRequest(); // initierer en ny request
-    xhp.responseType = 'text';
+    xhp.responseType = 'text'; 
   
     xhp.open("POST","/getUserInfo/"+username,true); //man setter url til meldingen
-    xhp.send();
+    xhp.send(); 
 
     xhp.timeout = 2000;
   
-    xhp.onload = () => {
-      displayUserInfo(JSON.parse(xhp.response))
+    xhp.onload = () => { 
+      displayUserInfo(JSON.parse(xhp.response)) 
     }
     
     xhp.ontimeout = (e) =>{ //connection timed out, resend
-      console.log("timeout, try again");
+      console.log("timeout, try again"); 
     }
 }
 

@@ -282,18 +282,18 @@ source.addEventListener("message", message => {
     console.log(message.message.name +": "+ message.message.chatMessage); //rare navn men det er sånn det blir 
     displayChat(message.message)
   } else if (message.messageType === "boardUpdate") {
-    turn = parseInt(message.message.turn)
-    updateBoard(message.message.board)
+    turn = parseInt(message.message.turn) 
+    updateBoard(message.message.board) 
   } else if (message.messageType === "boardMake") {
     dim = stringToList(message.message.dim)
-    console.log(dim)
+    console.log(dim) 
     tile_size = Math.min(ww*wp/dim[0], wh*wp/dim[1])
     form.style.visibility = "hidden"
     canvas.style.visibility = "visible"
   }
 })
 
-var sendingData = false;
+var sendingData = false; 
 
 function sendData(message){
   if (sendingData){return;} //for å stoppe å lage flere requests samtidig

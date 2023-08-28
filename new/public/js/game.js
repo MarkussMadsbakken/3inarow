@@ -508,12 +508,12 @@ function startHandler(){
     //document.getElementById("endGamePopup").style.display = "none";
     document.getElementById("endGamePopup").style.opacity = 0;
     document.getElementById("endGamePopup").style.pointerEvents = "none";
-    if (isNaN(parseInt(xSize)) || isNaN(parseInt(ySize)) || Object.keys(players) == 0) {
+    if (isNaN(parseInt(xSize)) || isNaN(parseInt(ySize)) || Object.keys(players) == 0) { 
         game.restart(7,6,{
             1: "/conai/assets/red.png",
             2: "/conai/assets/black.png"
         });
-    } else {
+    } else { 
         game.restart(parseInt(xSize),parseInt(ySize),players)
     }
 }
